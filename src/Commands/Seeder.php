@@ -1,6 +1,8 @@
 <?php namespace LaravelSeed\Commands;
 
+use Closure;
 use Illuminate\Console\Command;
+use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Laravel5SeedServiceProvider;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,15 +48,27 @@ class Seeder extends Command {
                     throw new SeederException('Invalid model class');
 
             // by default for the moment we will using only yaml provider to parse data from yaml files ..
-            $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory('yaml');
+
+            $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS);
 
             if( $this->argument('operation') == 'run' ) {
 
                 // need to be run all of the registered seeds ...
 
             } elseif( $this->argument('operation') == 'make' ) {
-                if( $file = $provider->makeFile( $this->option('model'), $this->option('class') ) ) {
-                    $this->info(sprintf('File "%s" created successfully!', $file));
+                if( app(Laravel5SeedServiceProvider::IOC_ALIAS) instanceof ProviderInterface ) {
+
+                    if( $file = $provider->makeFile( $this->option('model'), $this->option('class') ) )
+                        $this->info(sprintf('File "%s" created successfully!', $file));
+
+                } else {
+                    if( $closure = app(Laravel5SeedServiceProvider::IOC_ALIAS)['source'] ) {
+                        if( ! self::isClosure($closure))
+                            throw new SeederException('Invalid closure declared to config file');
+
+                        if( $file = $closure( $this->option('model'), $this->option('class') ) )
+                            $this->info(sprintf('File "%s" created successfully!', $file));
+                    }
                 }
             }
         } catch(SeederException $e) {
@@ -83,5 +97,18 @@ class Seeder extends Command {
             ['model', null, InputOption::VALUE_OPTIONAL, 'Eloquent class model.', null],
             ['class', null, InputOption::VALUE_OPTIONAL, 'An default DbClassSeeder.', null],
         ];
+    }
+
+    /**
+     * Check if current $var is Closure type ..
+     *
+     * @param $var
+     * @return bool
+     */
+    private static function isClosure($var) {
+        if( is_object( $var ) && ($var instanceof Closure) )
+            return true;
+
+        return false;
     }
 }
