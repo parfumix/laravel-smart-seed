@@ -32,7 +32,9 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        
+        $this->app->singleton('seeder', function() {
+            return new SeederFactory;
+        });
     }
 
     /**
