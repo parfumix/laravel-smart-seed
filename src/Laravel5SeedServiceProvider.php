@@ -4,6 +4,8 @@ use Illuminate\Support\ServiceProvider;
 
 class Laravel5SeedServiceProvider extends ServiceProvider {
 
+    const IOC_ALIAS = __NAMESPACE__;
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -32,7 +34,7 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        $this->app->singleton('seeder', function() {
+        $this->app->singleton(self::IOC_ALIAS, function() {
             return new SeederFactory;
         });
     }
