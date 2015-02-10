@@ -8,4 +8,11 @@ interface ProviderInterface {
      * @return mixed
      */
     public function getData();
+
+    /**
+     * Make an file source ..
+     *
+     * @return mixed
+     */
+    public function makeFile();
 }
