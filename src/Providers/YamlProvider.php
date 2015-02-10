@@ -3,8 +3,8 @@
 use File;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
-use LaravelSeed\Exceptions\SeederProviderException;
 use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 class YamlProvider implements ProviderInterface {
 
@@ -20,10 +20,18 @@ class YamlProvider implements ProviderInterface {
     /**
      * Return an array of data to be parsed ...
      *
+     * @throws SeederException
      * @return array|mixed
      */
     public function getData() {
-        return ['testdata' => 'testdata'];
+        if( ! File::isDirectory($this->config['path']) )
+            throw new SeederException('Invalid directory path.');
+
+        $yaml = new Parser();
+
+        return array_map(function($file) use($yaml) {
+            return $yaml->parse(File::get($file));
+        }, File::allFiles( $this->config['path'] ) );
     }
 
     /**
@@ -51,7 +59,7 @@ class YamlProvider implements ProviderInterface {
             [
                 'class'  => ucfirst($model),
                 'source' => array(
-                    
+
                 )
             ], 1
         ));
@@ -69,6 +77,7 @@ class YamlProvider implements ProviderInterface {
      */
     private function toYaml(array $data,  $mode = 1) {
         $dumper = new Dumper;
+
         return $dumper->dump($data, $mode);
     }
 }
