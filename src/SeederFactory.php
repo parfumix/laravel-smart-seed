@@ -17,8 +17,9 @@ class SeederFactory {
 
         $config = config('seeds.providers.' . trim(strtolower($alias)));
 
-        if( !$config['class'] )
+        if( !isset($config['class']) )
             return $config;
+
 
         return new $config['class']($config);
     }
