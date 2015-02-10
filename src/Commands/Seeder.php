@@ -58,7 +58,7 @@ class Seeder extends Command {
             } elseif( $this->argument('operation') == 'make' ) {
                 if( app(Laravel5SeedServiceProvider::IOC_ALIAS) instanceof ProviderInterface ) {
 
-                    if( $file = $provider->makeFile( $this->option('model'), $this->option('class') ) )
+                    if( $file = $provider->makeSource( $this->option('model'), $this->option('class') ) )
                         $this->info(sprintf('File "%s" created successfully!', $file));
 
                 } else {

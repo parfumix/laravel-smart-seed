@@ -32,8 +32,7 @@ class YamlProvider implements ProviderInterface {
      * @param string $seeder
      * @return bool|mixed
      */
-    public function makeFile($model, $seeder = '') {
-        return 'file.yaml';
-        return true;
+    public function makeSource($model, $seeder = '') {
+
     }
 }
