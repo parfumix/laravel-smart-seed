@@ -37,16 +37,14 @@ class Seeder extends Command {
      * @return mixed
      */
     public function fire() {
-        if( !in_array($this->argument('operation'), $this->availableArgs) )
-            return $this->error(
-                sprintf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs))
-            );
-
-        if( $this->argument('operation') != 'run' )
-            if( ! class_exists('App\\' . ucfirst(strtolower($this->option('model')))) )
-                return $this->error('Invalid model class');
-
         try {
+            if( !in_array($this->argument('operation'), $this->availableArgs) )
+                throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
+
+            if( $this->argument('operation') != 'run' )
+                if( ! class_exists('App\\' . ucfirst(strtolower($this->option('model')))) )
+                    throw new SeederException('Invalid model class');
+
             // by default for the moment we will using only yaml provider to parse data from yaml files ..
             $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory('yaml');
 
@@ -55,13 +53,12 @@ class Seeder extends Command {
                 // need to be run all of the registered seeds ...
 
             } elseif( $this->argument('operation') == 'make' ) {
-                if( $file = $provider->makeFile( $this->option('model'), $this->option('model'), $this->option('model') ) ) {
-                    return $this->info(sprintf('File "%s" created successfully!', $file));
+                if( $file = $provider->makeFile( $this->option('model'), $this->option('class') ) ) {
+                    $this->info(sprintf('File "%s" created successfully!', $file));
                 }
             }
-
         } catch(SeederException $e) {
-            return $this->error($e->getMessage());
+            $this->error($e->getMessage());
         }
     }
 
@@ -85,7 +82,6 @@ class Seeder extends Command {
         return [
             ['model', null, InputOption::VALUE_OPTIONAL, 'Eloquent class model.', null],
             ['class', null, InputOption::VALUE_OPTIONAL, 'An default DbClassSeeder.', null],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'An custom path to create yaml seeders.', null],
         ];
     }
 }
