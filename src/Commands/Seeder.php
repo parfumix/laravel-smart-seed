@@ -6,6 +6,8 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class Seeder extends Command {
 
+    private $availableArgs = ['run', 'make'];
+
     /**
      * The console command name.
      *
@@ -33,7 +35,8 @@ class Seeder extends Command {
      * @return mixed
      */
     public function fire() {
-        return $this->info('This is seeder info');
+        if( !in_array($this->argument('operation'), $this->availableArgs) )
+            return $this->error('Please provider an operation!');
     }
 
     /**
@@ -43,7 +46,7 @@ class Seeder extends Command {
      */
     protected function getArguments() {
         return [
-            ['operation', InputArgument::REQUIRED, 'An operation to run.', 'run'],
+            ['operation', InputArgument::OPTIONAL, 'An operation to run.'],
         ];
     }
 
@@ -54,7 +57,7 @@ class Seeder extends Command {
      */
     protected function getOptions() {
         return [
-            ['model', null, InputOption::VALUE_REQUIRED, 'Eloquent class model.', null],
+            ['model', null, InputOption::VALUE_OPTIONAL, 'Eloquent class model.', null],
             ['class', null, InputOption::VALUE_OPTIONAL, 'An default DbClassSeeder.', null],
             ['path', null, InputOption::VALUE_OPTIONAL, 'An custom path to create yaml seeders.', null],
         ];
