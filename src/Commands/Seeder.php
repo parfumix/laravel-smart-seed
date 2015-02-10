@@ -1,4 +1,4 @@
-<?php namespace App\Console\Commands;
+<?php namespace LaravelSeed;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,8 +22,6 @@ class Seeder extends Command {
 
     /**
      * Create a new command instance.
-     *
-     * @return \App\Console\Commands\Seeder
      */
     public function __construct() {
         parent::__construct();
