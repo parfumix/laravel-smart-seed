@@ -8,6 +8,7 @@ class SeederFactory {
      * Return an provider instance ..
      *
      * @param $alias
+     * @return mixed
      * @throws SeederException
      */
     public static function factory($alias) {
@@ -17,7 +18,7 @@ class SeederFactory {
         $config = config('seeds.providers.' . trim(strtolower($alias)));
 
         if( !$config['class'] )
-            throw new SeederException('Invalid provider class. Please provide one!');
+            return $config;
 
         return new $config['class']($config);
     }
