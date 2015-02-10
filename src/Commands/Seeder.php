@@ -1,4 +1,4 @@
-<?php namespace LaravelSeed;
+<?php namespace LaravelSeed\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,14 +11,14 @@ class Seeder extends Command {
      *
      * @var string
      */
-    protected $name = 'db:seeder';
+    protected $name = 'yaml:seeder';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Seeder an database from yaml.';
+    protected $description = 'Seed an database from yaml.';
 
     /**
      * Create a new command instance.
@@ -43,7 +43,7 @@ class Seeder extends Command {
      */
     protected function getArguments() {
         return [
-            ['example', InputArgument::OPTIONAL, 'An example argument.'],
+            ['operation', InputArgument::REQUIRED, 'An operation to run.', 'run'],
         ];
     }
 
@@ -54,7 +54,9 @@ class Seeder extends Command {
      */
     protected function getOptions() {
         return [
-            ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
+            ['model', null, InputOption::VALUE_REQUIRED, 'Eloquent class model.', null],
+            ['class', null, InputOption::VALUE_OPTIONAL, 'An default DbClassSeeder.', null],
+            ['path', null, InputOption::VALUE_OPTIONAL, 'An custom path to create yaml seeders.', null],
         ];
     }
 
