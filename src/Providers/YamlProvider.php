@@ -1,5 +1,7 @@
 <?php namespace LaravelSeed\Providers;
 
-class YamlProvider {
+use LaravelSeed\Contracts\ProviderInterface;
+
+class YamlProvider implements ProviderInterface {
 
 }
