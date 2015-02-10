@@ -44,15 +44,27 @@ class Seeder extends Command {
                 throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
 
             if( $this->argument('operation') != 'run' )
-                if( ! class_exists('App\\' . ucfirst(strtolower($this->option('model')))) )
+                if( ! class_exists('App\\' . ucfirst(strtolower($this->option('model')))) ) {
                     throw new SeederException('Invalid model class');
+                }
 
             // by default for the moment we will using only yaml provider to parse data from yaml files ..
             $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory('yaml');
 
             if( $this->argument('operation') == 'run' ) {
 
-                // need to be run all of the registered seeds ...
+                if( $provider instanceof ProviderInterface ) {
+
+                    $data = $provider->getData();
+                } else {
+                    if( $closure = $provider['data'] ) {
+                        if( ! self::isClosure($closure))
+                            throw new SeederException('Invalid closure declared to config file');
+
+                        $data = $closure();
+                    }
+                }
+
 
             } elseif( $this->argument('operation') == 'make' ) {
                 if( $provider instanceof ProviderInterface ) {
