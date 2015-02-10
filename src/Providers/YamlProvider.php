@@ -1,6 +1,9 @@
 <?php namespace LaravelSeed\Providers;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
 use LaravelSeed\Contracts\ProviderInterface;
+use LaravelSeed\Exceptions\SeederProviderException;
 
 class YamlProvider implements ProviderInterface {
 
@@ -25,9 +28,13 @@ class YamlProvider implements ProviderInterface {
     /**
      * Make source file ..
      *
+     * @param $model
+     * @param string $path
+     * @param string $seeder
      * @return bool|mixed
      */
-    public function makeFile() {
+    public function makeFile($model, $path = '', $seeder = '') {
+        return 'file.yaml';
         return true;
     }
 }

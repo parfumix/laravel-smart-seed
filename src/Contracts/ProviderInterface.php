@@ -12,7 +12,10 @@ interface ProviderInterface {
     /**
      * Make an file source ..
      *
+     * @param $model
+     * @param string $path
+     * @param string $seeder
      * @return mixed
      */
-    public function makeFile();
+    public function makeFile($model, $path = '', $seeder = '');
 }
