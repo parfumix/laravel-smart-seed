@@ -36,7 +36,15 @@ class Seeder extends Command {
      */
     public function fire() {
         if( !in_array($this->argument('operation'), $this->availableArgs) )
-            return $this->error('Please provider an operation!');
+            return $this->error(
+                sprintf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs))
+            );
+
+        if( ! class_exists('App\\' . ucfirst(strtolower($this->option('model')))) )
+            return $this->error('Invalid model class');
+
+
+
     }
 
     /**
