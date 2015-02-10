@@ -9,5 +9,13 @@ return array(
       |
       */
 
-    'path' => ''
+    'path' => '',
+
+
+    'providers' => array(
+
+        'yaml' => array(
+            ''
+        )
+    )
 );
