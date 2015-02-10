@@ -11,13 +11,14 @@ return array(
       |
       */
 
-    'path' => '',
-
-
     'providers' => array(
 
         'yaml' => array(
-            'class' => YamlProvider::class
+            'path'   => config_path('wl/seeds/yaml'),
+            'class'  => YamlProvider::class,
+            'run' => function( ) {
+                // logic
+            }
         )
     )
 );
