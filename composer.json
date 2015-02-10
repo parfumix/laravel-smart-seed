@@ -1,5 +1,6 @@
 {
     "name": "parfumix/laravel-yaml-seed",
+    "version": "v1.0",
     "type": "library",
     "description": "An laravel5 yaml seeder.",
     "keywords": ["laravel5", "seed", "production"],
