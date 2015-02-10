@@ -17,14 +17,14 @@ class Seeder extends Command {
      *
      * @var string
      */
-    protected $name = 'yaml:seeder';
+    protected $name = 'db:seeder';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Seed an database from yaml.';
+    protected $description = 'Seed an database from specific provider source.';
 
     /**
      * Create a new command instance.
