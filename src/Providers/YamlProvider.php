@@ -29,11 +29,10 @@ class YamlProvider implements ProviderInterface {
      * Make source file ..
      *
      * @param $model
-     * @param string $path
      * @param string $seeder
      * @return bool|mixed
      */
-    public function makeFile($model, $path = '', $seeder = '') {
+    public function makeFile($model, $seeder = '') {
         return 'file.yaml';
         return true;
     }
