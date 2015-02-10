@@ -1,5 +1,7 @@
 <?php
 
+use LaravelSeed\Providers\YamlProvider;
+
 return array(
 
     /*
@@ -15,7 +17,7 @@ return array(
     'providers' => array(
 
         'yaml' => array(
-            ''
+            'class' => YamlProvider::class
         )
     )
 );
