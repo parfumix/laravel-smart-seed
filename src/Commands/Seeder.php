@@ -18,7 +18,7 @@ class Seeder extends Command {
      *
      * @var string
      */
-    protected $name = 'db:seeder';
+    protected $name = 'smart:seed';
 
     /**
      * The console command description.
