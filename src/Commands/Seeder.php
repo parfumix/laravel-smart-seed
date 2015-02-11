@@ -5,6 +5,7 @@ use Illuminate\Console\Command;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Laravel5SeedServiceProvider;
+use LaravelSeed\TableSeeder;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -53,9 +54,13 @@ class Seeder extends Command {
                             if( ! self::isClosure($closure))
                                 throw new SeederException('Invalid closure declared to config file');
 
-                            $data = $closure();
+                            if( $files = TableSeeder::seed($closure()) )
+                                self::notifySources($files);
+
                         } elseif( $provider instanceof ProviderInterface ) {
-                            $data = $provider->getData();
+                            if( $files = TableSeeder::seed($provider->getData()) )
+                                self::notifySources($files);
+
                         }
 
                     break;
