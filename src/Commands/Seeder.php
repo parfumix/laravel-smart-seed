@@ -55,11 +55,11 @@ class Seeder extends Command {
                                 throw new SeederException('Invalid closure declared to config file');
 
                             if( $files = TableSeeder::seed($closure()) )
-                                self::notifySources($files);
+                                self::notifySources($files, 'seeded');
 
                         } elseif( $provider instanceof ProviderInterface ) {
                             if( $files = TableSeeder::seed($provider->getData()) )
-                                self::notifySources($files);
+                                self::notifySources($files, 'seeded');
 
                         }
 
@@ -73,12 +73,12 @@ class Seeder extends Command {
                                 throw new SeederException('Invalid closure declared to config file');
 
                             if( $files = $closure( $this->argument('source'), $this->option('class') ) )
-                                self::notifySources($files);
+                                self::notifySources($files, 'created');
 
                         } elseif( $provider instanceof ProviderInterface ) {
 
                             if( $files = $provider->create( $this->argument('source'), $this->option('class') ) )
-                                self::notifySources($files);
+                                self::notifySources($files, 'created');
 
                         }
                     break;
@@ -129,10 +129,11 @@ class Seeder extends Command {
      * Notify user recent created files .
      *
      * @param array $files
+     * @param $operation
      */
-    private function notifySources(array $files) {
-        array_walk($files, function($file) {
-            $this->info(sprintf('File "%s" created successfully!', $file));
+    private function notifySources(array $files, $operation) {
+        array_walk($files, function($file) use($operation) {
+            $this->info(sprintf('File "%s" %s successfully!', $file, $operation));
         });
     }
 
