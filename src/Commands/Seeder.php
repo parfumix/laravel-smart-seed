@@ -69,7 +69,7 @@ class Seeder extends Command {
             } elseif( $this->argument('operation') == 'create' ) {
                 if( $provider instanceof ProviderInterface ) {
 
-                    if( $file = $provider->makeSource( $this->option('model'), $this->option('class') ) )
+                    if( $file = $provider->create( $this->option('model'), $this->option('class') ) )
                         $this->info(sprintf('File "%s" created successfully!', $file));
 
                 } else {
@@ -94,7 +94,7 @@ class Seeder extends Command {
      */
     protected function getArguments() {
         return [
-            ['operation', InputArgument::OPTIONAL, 'An operation to run.'],
+            ['operation', InputArgument::OPTIONAL, 'An operation to run. Use "create" to create an source and "run" to seed database.'],
         ];
     }
 
@@ -105,7 +105,6 @@ class Seeder extends Command {
      */
     protected function getOptions() {
         return [
-            ['model', null, InputOption::VALUE_OPTIONAL, 'Eloquent class model.', null],
             ['class', null, InputOption::VALUE_OPTIONAL, 'An default DbClassSeeder.', null],
         ];
     }
