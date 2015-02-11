@@ -39,4 +39,10 @@ To add new sources you have to enter command below
 ```bash
 php artisan db:seeder create user,page,news
 ```
-Each of the name have to be identical existent Eloquent model.
+Each of the name have to be identical existent Eloquent model. 
+
+To run all created seeder sources just enter
+```bash
+php artisan db:seeder run
+```
+
