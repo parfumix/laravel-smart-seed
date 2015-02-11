@@ -41,6 +41,9 @@ class Seeder extends Command {
      */
     public function fire() {
         try {
+            if(! is_array(config('seeds')))
+                throw new SeederException('Not found configuration file. Please use vendor:publish to publish config file!');
+            
             if( !in_array($this->argument('operation'), $this->availableArgs) )
                 throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
 
