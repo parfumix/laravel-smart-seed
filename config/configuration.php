@@ -21,7 +21,7 @@ return array(
     'providers' => array(
 
         'yaml' => array(
-            'path'   => config_path('wl/seeds/yaml'),
+            'path'   => config_path('seeds/yaml'),
             'class'  => YamlProvider::class,
         )
     )
