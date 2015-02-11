@@ -37,35 +37,43 @@ class YamlProvider implements ProviderInterface {
     /**
      * Make source file ..
      *
-     * @param $model
+     * @param $source
      * @param string $seeder
      * @throws SeederException
      * @return bool|mixed
      */
-    public function create($model, $seeder = '') {
+    public function create($source, $seeder = '') {
         if( ! File::isDirectory($this->config['path']) )
             throw new SeederException('Invalid directory path.');
 
         if( ! File::isWritable( $this->config['path'] ) )
             throw new SeederException('Path are not writable. Please chmod!');
 
-        $fileName =  trim(strtolower($model)) . '.yaml';
-        $fullPath = $this->config['path'] . DIRECTORY_SEPARATOR . $fileName;
+        $source = explode(',', $source);
+        $files = [];
+        array_walk($source, function($name) use (&$files) {
 
-        if( File::exists($fullPath))
-            throw new SeederException('Model already exists.');
+            #@todo add logic to check if model eloquent exists.
 
-        File::put( $fullPath, self::toYaml(
-            [
-                'class'  => ucfirst($model),
-                'source' => array(
+            $fileName =  trim(strtolower($name)) . '.yaml';
+            $fullPath = $this->config['path'] . DIRECTORY_SEPARATOR . $fileName;
 
-                )
-            ], 1
-        ));
+            if( File::exists($fullPath))
+                #throw new SeederException('Model already exists.');
 
-        return $fileName;
+            File::put( $fullPath, self::toYaml(
+                [
+                    'class'  => ucfirst($name),
+                    'source' => array(
 
+                    )
+                ], 1
+            ));
+
+            $files[] = $fileName;
+        });
+
+        return $files;
     }
 
     /**
