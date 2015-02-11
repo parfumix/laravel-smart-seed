@@ -41,8 +41,31 @@ php artisan db:seeder create user,page,news
 ```
 Each of the name have to be identical existent Eloquent model. 
 
-To run all created seeder sources just enter
+To run all created seeder sources enter
 ```bash
 php artisan db:seeder run
 ```
 
+## Set up configuration file
+
+To add new providers go to app/seeds.php configuration file and add provider
+
+```php
+ 'providers' => array(
+        'yaml' => array(
+            'path'   => config_path('wl/seeds/yaml'),
+            
+            #enter an provider which will create an seed resource and rn
+            'class'  => LaravelSeed\Providers\YamlProvider::class,
+            
+            #or add closure functions
+            'run' => function() {
+              // run all your migrations from provider path
+            },
+            
+            'create' => function($source, $class) {
+              // create an resource seed
+            }
+        )
+    )
+```
