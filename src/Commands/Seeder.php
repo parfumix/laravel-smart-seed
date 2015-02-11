@@ -63,6 +63,7 @@ class Seeder extends Command {
 
                         }
 
+
                     break;
 
                 case 'create':
@@ -109,6 +110,7 @@ class Seeder extends Command {
     protected function getOptions() {
         return [
             ['class', null, InputOption::VALUE_OPTIONAL, 'An default DbClassSeeder.', null],
+            ['local', null, InputOption::VALUE_OPTIONAL, 'Run default seeders.', null],
         ];
     }
 
