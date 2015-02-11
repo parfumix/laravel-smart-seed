@@ -20,9 +20,9 @@ Then, add you have to register an command . Just go to app/console/kernel and ad
 
 ```php
 protected $commands = [
-		'App\Console\Commands\Inspire',
+    'App\Console\Commands\Inspire',
 		
-		#insert that
+    # --- insert that ---
     LaravelSeed\Commands\Seeder::class
-	];
+];
 ```
