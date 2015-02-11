@@ -37,13 +37,13 @@ php artisan vendor:publish
 
 To add new sources you have to enter command below 
 ```bash
-php artisan db:seeder create user,page,news
+php artisan smart:seed create user,page,news
 ```
 Each of the name have to be identical existent Eloquent model. 
 
 To run all created seeder sources enter
 ```bash
-php artisan db:seeder run
+php artisan smart:seed run
 ```
 
 ## Set up configuration file
