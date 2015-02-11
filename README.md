@@ -26,3 +26,9 @@ protected $commands = [
     LaravelSeed\Commands\Seeder::class
 ];
 ```
+
+Publish your config file using command and go to your config folder.
+
+```php
+php artisan vendor:publish
+```
