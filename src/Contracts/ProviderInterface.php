@@ -16,5 +16,5 @@ interface ProviderInterface {
      * @param string $seeder
      * @return mixed
      */
-    public function makeSource($model, $seeder = '');
+    public function create($model, $seeder = '');
 }

@@ -42,7 +42,7 @@ class YamlProvider implements ProviderInterface {
      * @throws SeederException
      * @return bool|mixed
      */
-    public function makeSource($model, $seeder = '') {
+    public function create($model, $seeder = '') {
         if( ! File::isDirectory($this->config['path']) )
             throw new SeederException('Invalid directory path.');
 
