@@ -32,3 +32,11 @@ Publish your config file using command and go to your config folder.
 ```php
 php artisan vendor:publish
 ```
+
+## Add new source seeders.
+
+To add new sources you have to enter command below 
+```bash
+php artisan db:seeder create user,page,news
+```
+Each of the name have to be identical existent Eloquent model.
