@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class Seeder extends Command {
 
-    private $availableArgs = ['run', 'make'];
+    private $availableArgs = ['run', 'create'];
 
     /**
      * The console command name.
@@ -66,7 +66,7 @@ class Seeder extends Command {
                 }
 
 
-            } elseif( $this->argument('operation') == 'make' ) {
+            } elseif( $this->argument('operation') == 'create' ) {
                 if( $provider instanceof ProviderInterface ) {
 
                     if( $file = $provider->makeSource( $this->option('model'), $this->option('class') ) )
