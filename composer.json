@@ -1,5 +1,5 @@
 {
-    "name": "parfumix/laravel-yaml-seed",
+    "name": "parfumix/laravel-smart-seed",
     "version": "v1.0",
     "type": "library",
     "description": "An laravel5 yaml seeder.",
