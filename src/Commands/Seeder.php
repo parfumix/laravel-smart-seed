@@ -66,8 +66,8 @@ class Seeder extends Command {
                     break;
 
                 case 'create':
-                        if( is_array($provider) && !empty($provider['source'])  ) {
-                            $closure = $provider['source'];
+                        if( is_array($provider) && !empty($provider['create'])  ) {
+                            $closure = $provider['create'];
 
                             if( ! self::isClosure($closure))
                                 throw new SeederException('Invalid closure declared to config file');
