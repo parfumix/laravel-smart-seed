@@ -1,1 +1,1 @@
-# laravel-yaml-seed
+# Laravel smart seeder
