@@ -55,7 +55,7 @@ To add new providers go to app/seeds.php configuration file and add provider
 ```php
  'providers' => array(
         'yaml' => array(
-            'path'   => config_path('wl/seeds/yaml'),
+            'path'   => config_path('seeds/yaml'),
             
             #enter an provider which will create an seed resource and rn
             'class'  => LaravelSeed\Providers\YamlProvider::class,
