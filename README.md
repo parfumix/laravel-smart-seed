@@ -18,7 +18,7 @@ To wire this up in your Laravel project, you need to add the service provider. O
  'LaravelSeed\Laravel5SeedServiceProvider',
 ```
 
-Then, add you have to register an command . Just go to app/console/kernel and add following line to
+Then, you have to register a command. Just go to app/console/kernel and add following line:
 
 ```php
 protected $commands = [
@@ -29,7 +29,7 @@ protected $commands = [
 ];
 ```
 
-Publish your config file using command and go to your config folder.
+Publish your config file using the following command.
 
 ```php
 php artisan vendor:publish
@@ -41,7 +41,7 @@ To add new sources you have to enter command below
 ```bash
 php artisan smart:seed create user,page,news
 ```
-Each of the name have to be identical existent Eloquent model. 
+Each of the name have to be identical to an existent Eloquent model. 
 
 To run all created seeder sources enter
 ```bash
@@ -50,7 +50,7 @@ php artisan smart:seed run
 
 ## Set up configuration file
 
-To add new providers go to app/seeds.php configuration file and add provider
+To add new providers go to app/seeds.php configuration file and add the provider
 
 ```php
  'providers' => array(
