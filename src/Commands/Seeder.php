@@ -49,17 +49,17 @@ class Seeder extends Command {
 
             switch( $this->argument('operation') ) {
                 case 'run':
-                        if( $provider instanceof ProviderInterface ) {
+                        if( is_array($provider) && !empty($provider['run']) ) {
+                            $closure = $provider['run'];
 
+                            if( ! self::isClosure($closure))
+                                throw new SeederException('Invalid closure declared to config file');
+
+                            $data = $closure();
+                        } elseif( $provider instanceof ProviderInterface ) {
                             $data = $provider->getData();
-                        } else {
-                            if( $closure = $provider['data'] ) {
-                                if( ! self::isClosure($closure))
-                                    throw new SeederException('Invalid closure declared to config file');
-
-                                $data = $closure();
-                            }
                         }
+
                     break;
 
                 case 'create':
