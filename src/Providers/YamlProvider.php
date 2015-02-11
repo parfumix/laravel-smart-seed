@@ -52,6 +52,7 @@ class YamlProvider implements ProviderInterface {
         $source = explode(',', $source);
         $files = [];
         array_walk($source, function($name) use (&$files) {
+            #@todo If model doesn't exists than previous created files not showed ..
             if( ! class_exists('App\\' . ucfirst(strtolower( $name ))) )
                 throw new SeederException('Invalid model class');
 
