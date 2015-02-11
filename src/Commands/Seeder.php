@@ -44,7 +44,7 @@ class Seeder extends Command {
                 throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
 
             $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory(config('seeds.default'));
-            
+
             switch( $this->argument('operation') ) {
                 case 'run':
                         if( is_array($provider) && !empty($provider['run']) ) {
@@ -63,6 +63,7 @@ class Seeder extends Command {
                 case 'create':
                         if( is_array($provider) && !empty($provider['source'])  ) {
                             $closure = $provider['source'];
+
                             if( ! self::isClosure($closure))
                                 throw new SeederException('Invalid closure declared to config file');
 
