@@ -1,5 +1,7 @@
 # Laravel smart seeder
 
+[![Join the chat at https://gitter.im/parfumix/laravel-smart-seed](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/parfumix/laravel-smart-seed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Installation
 
 Begin by installing this package through Composer. Run this command from the Terminal:
