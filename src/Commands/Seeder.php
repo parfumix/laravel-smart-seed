@@ -44,7 +44,7 @@ class Seeder extends Command {
                 throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
 
             // by default for the moment we will using only yaml provider to parse data from yaml files ..
-            $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory('yaml');
+            $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory(config('seeds.default'));
 
 
             switch( $this->argument('operation') ) {
