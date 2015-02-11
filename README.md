@@ -83,4 +83,4 @@ To set up an default provider go to app/seeds.php
 
 ### License
 
-laravel-twilio is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Laravel smart seeder is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
