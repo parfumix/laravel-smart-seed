@@ -63,20 +63,17 @@ class Seeder extends Command {
 
             } elseif( $this->argument('operation') == 'create' ) {
 
-                if( $closure = $provider['source'] ) {
-                    if( ! self::isClosure($closure))
+                if( is_array($provider) && !empty($provider['source'])  ) {
+                    if( ! self::isClosure($provider['source']))
                         throw new SeederException('Invalid closure declared to config file');
 
-                    if( $file = $closure( $this->argument('source'), $this->option('class') ) )
-                        $this->info(sprintf('File "%s" created successfully!', $file));
+                    if( $files = $provider['source']( $this->argument('source'), $this->option('class') ) )
+                        self::notifySources($files);
 
                 } elseif( $provider instanceof ProviderInterface ) {
 
-                    if( $files = $provider->create( $this->argument('source'), $this->option('class') ) ) {
-                        array_walk($files, function($file) {
-                            $this->info(sprintf('File "%s" created successfully!', $file));
-                        });
-                    }
+                    if( $files = $provider->create( $this->argument('source'), $this->option('class') ) )
+                        self::notifySources($files);
 
                 }
 
@@ -121,4 +118,16 @@ class Seeder extends Command {
 
         return false;
     }
+
+    /**
+     * Notify user recent created files .
+     *
+     * @param array $files
+     */
+    private function notifySources(array $files) {
+        array_walk($files, function($file) {
+            $this->info(sprintf('File "%s" created successfully!', $file));
+        });
+    }
+
 }
