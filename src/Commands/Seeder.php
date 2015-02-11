@@ -98,7 +98,7 @@ class Seeder extends Command {
     protected function getArguments() {
         return [
             ['operation', InputArgument::OPTIONAL, 'An operation to run. Use "create" to create an source and "run" to seed database.'],
-            ['source',    InputArgument::OPTIONAL, 'An source name.'],
+            ['source',    InputArgument::OPTIONAL, 'An source Eloquent model name.'],
         ];
     }
 
