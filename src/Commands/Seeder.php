@@ -46,38 +46,39 @@ class Seeder extends Command {
             // by default for the moment we will using only yaml provider to parse data from yaml files ..
             $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory('yaml');
 
-            if( $this->argument('operation') == 'run' ) {
 
-                if( $provider instanceof ProviderInterface ) {
+            switch( $this->argument('operation') ) {
+                case 'run':
+                        if( $provider instanceof ProviderInterface ) {
 
-                    $data = $provider->getData();
-                } else {
-                    if( $closure = $provider['data'] ) {
-                        if( ! self::isClosure($closure))
-                            throw new SeederException('Invalid closure declared to config file');
+                            $data = $provider->getData();
+                        } else {
+                            if( $closure = $provider['data'] ) {
+                                if( ! self::isClosure($closure))
+                                    throw new SeederException('Invalid closure declared to config file');
 
-                        $data = $closure();
-                    }
-                }
+                                $data = $closure();
+                            }
+                        }
+                    break;
 
+                case 'create':
+                        if( is_array($provider) && !empty($provider['source'])  ) {
+                            if( ! self::isClosure($provider['source']))
+                                throw new SeederException('Invalid closure declared to config file');
 
-            } elseif( $this->argument('operation') == 'create' ) {
+                            if( $files = $provider['source']( $this->argument('source'), $this->option('class') ) )
+                                self::notifySources($files);
 
-                if( is_array($provider) && !empty($provider['source'])  ) {
-                    if( ! self::isClosure($provider['source']))
-                        throw new SeederException('Invalid closure declared to config file');
+                        } elseif( $provider instanceof ProviderInterface ) {
 
-                    if( $files = $provider['source']( $this->argument('source'), $this->option('class') ) )
-                        self::notifySources($files);
+                            if( $files = $provider->create( $this->argument('source'), $this->option('class') ) )
+                                self::notifySources($files);
 
-                } elseif( $provider instanceof ProviderInterface ) {
-
-                    if( $files = $provider->create( $this->argument('source'), $this->option('class') ) )
-                        self::notifySources($files);
-
-                }
-
+                        }
+                    break;
             }
+
         } catch(SeederException $e) {
             $this->error($e->getMessage());
         }
