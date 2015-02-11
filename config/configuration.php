@@ -12,14 +12,17 @@ return array(
       */
     'default' => 'yaml',
 
+    /*
+     |--------------------------------------------------------------------------
+     | LIST OF PROVIDERS LISTED BELOW
+     |--------------------------------------------------------------------------
+     |
+     */
     'providers' => array(
 
         'yaml' => array(
             'path'   => config_path('wl/seeds/yaml'),
             'class'  => YamlProvider::class,
-            'run' => function( ) {
-                // logic
-            }
         )
     )
 );
