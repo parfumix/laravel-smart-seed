@@ -4,7 +4,7 @@
     "type": "library",
     "description": "An laravel5 yaml seeder.",
     "keywords": ["laravel5", "seed", "production"],
-    "homepage": "https://github.com/parfumix/laravel5-twilio",
+    "homepage": "https://github.com/parfumix/laravel-smart-seed",
     "license": "MIT",
     "authors": [
         {
