@@ -62,7 +62,15 @@ class Seeder extends Command {
 
 
             } elseif( $this->argument('operation') == 'create' ) {
-                if( $provider instanceof ProviderInterface ) {
+
+                if( $closure = $provider['source'] ) {
+                    if( ! self::isClosure($closure))
+                        throw new SeederException('Invalid closure declared to config file');
+
+                    if( $file = $closure( $this->argument('source'), $this->option('class') ) )
+                        $this->info(sprintf('File "%s" created successfully!', $file));
+
+                } elseif( $provider instanceof ProviderInterface ) {
 
                     if( $files = $provider->create( $this->argument('source'), $this->option('class') ) ) {
                         array_walk($files, function($file) {
@@ -70,15 +78,8 @@ class Seeder extends Command {
                         });
                     }
 
-                } else {
-                    if( $closure = $provider['source'] ) {
-                        if( ! self::isClosure($closure))
-                            throw new SeederException('Invalid closure declared to config file');
-
-                        if( $file = $closure( $this->argument('source'), $this->option('class') ) )
-                            $this->info(sprintf('File "%s" created successfully!', $file));
-                    }
                 }
+
             }
         } catch(SeederException $e) {
             $this->error($e->getMessage());
