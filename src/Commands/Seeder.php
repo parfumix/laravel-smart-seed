@@ -43,10 +43,8 @@ class Seeder extends Command {
             if( !in_array($this->argument('operation'), $this->availableArgs) )
                 throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
 
-            // by default for the moment we will using only yaml provider to parse data from yaml files ..
             $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory(config('seeds.default'));
-
-
+            
             switch( $this->argument('operation') ) {
                 case 'run':
                         if( is_array($provider) && !empty($provider['run']) ) {
