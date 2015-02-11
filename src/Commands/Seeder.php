@@ -64,10 +64,11 @@ class Seeder extends Command {
 
                 case 'create':
                         if( is_array($provider) && !empty($provider['source'])  ) {
-                            if( ! self::isClosure($provider['source']))
+                            $closure = $provider['source'];
+                            if( ! self::isClosure($closure))
                                 throw new SeederException('Invalid closure declared to config file');
 
-                            if( $files = $provider['source']( $this->argument('source'), $this->option('class') ) )
+                            if( $files = $closure( $this->argument('source'), $this->option('class') ) )
                                 self::notifySources($files);
 
                         } elseif( $provider instanceof ProviderInterface ) {
