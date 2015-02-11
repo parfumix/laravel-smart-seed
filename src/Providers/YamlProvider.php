@@ -52,21 +52,18 @@ class YamlProvider implements ProviderInterface {
         $source = explode(',', $source);
         $files = [];
         array_walk($source, function($name) use (&$files) {
-
-            #@todo add logic to check if model eloquent exists.
+            if( ! class_exists('App\\' . ucfirst(strtolower( $name ))) )
+                throw new SeederException('Invalid model class');
 
             $fileName =  trim(strtolower($name)) . '.yaml';
             $fullPath = $this->config['path'] . DIRECTORY_SEPARATOR . $fileName;
 
             if( File::exists($fullPath))
-                #throw new SeederException('Model already exists.');
+                throw new SeederException('Model already exists.');
 
-            File::put( $fullPath, self::toYaml(
-                [
+            File::put( $fullPath, self::toYaml([
                     'class'  => ucfirst($name),
-                    'source' => array(
-
-                    )
+                    'source' => array( )
                 ], 1
             ));
 
