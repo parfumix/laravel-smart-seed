@@ -69,3 +69,12 @@ To add new providers go to app/seeds.php configuration file and add provider
         )
     )
 ```
+
+## Set up an default provider
+
+To set up an default provider go to app/seeds.php
+
+```php
+  # enter an existing provider.
+  'default' => 'yaml',
+```
