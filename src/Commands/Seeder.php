@@ -43,11 +43,6 @@ class Seeder extends Command {
             if( !in_array($this->argument('operation'), $this->availableArgs) )
                 throw new SeederException(printf('Please provider an operation! Use follow commands: %s.', implode(', ', $this->availableArgs)));
 
-            if( $this->argument('operation') != 'run' )
-                if( ! class_exists('App\\' . ucfirst(strtolower($this->option('model')))) ) {
-                    throw new SeederException('Invalid model class');
-                }
-
             // by default for the moment we will using only yaml provider to parse data from yaml files ..
             $provider = app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory('yaml');
 
@@ -69,15 +64,18 @@ class Seeder extends Command {
             } elseif( $this->argument('operation') == 'create' ) {
                 if( $provider instanceof ProviderInterface ) {
 
-                    if( $file = $provider->create( $this->option('model'), $this->option('class') ) )
-                        $this->info(sprintf('File "%s" created successfully!', $file));
+                    if( $files = $provider->create( $this->argument('source'), $this->option('class') ) ) {
+                        array_walk($files, function($file) {
+                            $this->info(sprintf('File "%s" created successfully!', $file));
+                        });
+                    }
 
                 } else {
                     if( $closure = $provider['source'] ) {
                         if( ! self::isClosure($closure))
                             throw new SeederException('Invalid closure declared to config file');
 
-                        if( $file = $closure( $this->option('model'), $this->option('class') ) )
+                        if( $file = $closure( $this->argument('source'), $this->option('class') ) )
                             $this->info(sprintf('File "%s" created successfully!', $file));
                     }
                 }
@@ -95,6 +93,7 @@ class Seeder extends Command {
     protected function getArguments() {
         return [
             ['operation', InputArgument::OPTIONAL, 'An operation to run. Use "create" to create an source and "run" to seed database.'],
+            ['source',    InputArgument::OPTIONAL, 'An source name.'],
         ];
     }
 
