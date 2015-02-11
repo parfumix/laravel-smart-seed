@@ -78,3 +78,7 @@ To set up an default provider go to app/seeds.php
   # enter an existing provider.
   'default' => 'yaml',
 ```
+
+### License
+
+laravel-twilio is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
