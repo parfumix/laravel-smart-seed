@@ -1,8 +1,11 @@
 <?php namespace LaravelSeed\Commands;
 
-use Illuminate\Console\Command;
+use LaravelSeed\Contracts\ProviderInterface;
+use LaravelSeed\Exceptions\SeederException;
+use LaravelSeed\Laravel5SeedServiceProvider as Provider;
+use LaravelSeed\TableSeeder;
 
-class Run extends Command {
+class Run extends AbstractCommand {
 
     /**
      * The console command name.
@@ -24,7 +27,28 @@ class Run extends Command {
      * @return mixed
      */
     public function fire() {
+        try {
+            parent::fire();
 
+            $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
+
+            if( is_array($provider) && !empty($provider['run']) ) {
+                $closure = $provider['run'];
+
+                if( ! self::isClosure($closure))
+                    throw new SeederException('Invalid closure declared to config file');
+
+                if( $files = TableSeeder::seed($closure()) )
+                    self::notifySources($files, 'seeded');
+
+            } elseif( $provider instanceof ProviderInterface ) {
+                if( $files = TableSeeder::seed($provider->getData()) )
+                    self::notifySources($files, 'seeded');
+
+            }
+        } catch(SeederException $e) {
+            $this->error('\n' . $e->getMessage());
+        }
     }
 
     /**
