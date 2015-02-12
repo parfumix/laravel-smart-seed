@@ -6,6 +6,11 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
 
     const IOC_ALIAS = __NAMESPACE__;
 
+    protected $commands = [
+        'smart:seeder'  => Commands\Seeder::class,
+        'smart:install' => Commands\Install::class
+    ];
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -45,11 +50,13 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      * Set commands ...
      */
     private function setCommands() {
-        $this->app->bindShared('smart:seeder',function() {
-           return new Commands\Seeder;
-        });
+        array_walk($this->commands, function($class, $command) {
+            $this->app->bindShared($command,function() use($class, $command) {
+                return new $class;
+            });
 
-        $this->commands(['smart:seeder']);
+            $this->commands([$command]);
+        });
     }
 
     /**
