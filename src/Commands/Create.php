@@ -1,8 +1,11 @@
 <?php namespace LaravelSeed\Commands;
 
-use Illuminate\Console\Command;
+use LaravelSeed\Contracts\ProviderInterface;
+use LaravelSeed\Exceptions\SeederException;
+use LaravelSeed\Laravel5SeedServiceProvider as Provider;
+use Symfony\Component\Console\Input\InputArgument;
 
-class Create extends Command {
+class Create extends AbstractCommand {
 
     /**
      * The console command name.
@@ -16,15 +19,41 @@ class Create extends Command {
      *
      * @var string
      */
-    protected $description = 'Create smart seeders';
+    protected $description = 'Create smart Eloquent seeders';
 
     /**
      * Execute the console command.
      *
+     * @throws SeederException
      * @return mixed
      */
     public function fire() {
+        try {
+            parent::fire();
 
+            if(! $this->argument('source'))
+                throw new SeederException('Invalid source!');
+
+            $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
+
+            if( is_array($provider) && !empty($provider['create'])  ) {
+                $closure = $provider['create'];
+
+                if( ! self::isClosure($closure))
+                    throw new SeederException('Invalid closure declared to config file');
+
+                if( $files = $closure( $this->argument('source'), $this->option('class') ) )
+                    self::notifySources($files, 'created');
+
+            } elseif( $provider instanceof ProviderInterface ) {
+
+                if( $files = $provider->create( $this->argument('source'), $this->option('class') ) )
+                    self::notifySources($files, 'created');
+
+            }
+        } catch(SeederException $e) {
+            $this->error('\n' . $e->getMessage());
+        }
     }
 
     /**
@@ -33,7 +62,9 @@ class Create extends Command {
      * @return array
      */
     protected function getArguments() {
-        return [];
+        return [
+            ['source',    InputArgument::OPTIONAL, 'An source Eloquent model name.'],
+        ];
     }
 
     /**
