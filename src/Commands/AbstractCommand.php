@@ -2,8 +2,14 @@
 
 use Closure;
 use Illuminate\Console\Command;
+use LaravelSeed\Exceptions\SeederException;
 
 abstract class AbstractCommand extends Command {
+
+    public function fire() {
+        if(! is_array(config('seeds')))
+            throw new SeederException('Not found configuration file. Please use vendor:publish to publish config file!');
+    }
 
     /**
      * Notify user recent created files .
