@@ -28,13 +28,6 @@ class Seeder extends Command {
     protected $description = 'Seed an database from specific provider source.';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct() {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
