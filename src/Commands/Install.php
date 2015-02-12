@@ -16,7 +16,7 @@ class Install extends Command {
      *
      * @var string
      */
-    protected $description = 'Install smart seeder';
+    protected $description = 'Install smart seeder.';
 
     /**
      * Execute the console command.

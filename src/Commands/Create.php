@@ -19,7 +19,7 @@ class Create extends AbstractCommand {
      *
      * @var string
      */
-    protected $description = 'Create smart Eloquent seeders';
+    protected $description = 'Create smart Eloquent seeders.';
 
     /**
      * Execute the console command.
