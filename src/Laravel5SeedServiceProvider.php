@@ -8,7 +8,8 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
 
     protected $commands = [
         'smart:seeder'  => Commands\Seeder::class,
-        'smart:install' => Commands\Install::class
+        'smart:install' => Commands\Install::class,
+        'smart:run'     => Commands\Run::class,
     ];
 
     /**
