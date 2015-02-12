@@ -52,11 +52,11 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      */
     private function setCommands() {
         array_walk($this->commands, function($class, $command) {
-            $this->app->bindShared($command,function() use($class, $command) {
+            $this->app->bindShared($command, function() use($class, $command) {
                 return new $class;
             });
 
-            $this->commands([$command]);
+            $this->commands($command);
         });
     }
 
