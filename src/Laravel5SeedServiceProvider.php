@@ -7,7 +7,6 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
     const IOC_ALIAS = __NAMESPACE__;
 
     protected $commands = [
-        'smart:seeder'  => Commands\Seeder::class,
         'smart:install' => Commands\Install::class,
         'smart:run'     => Commands\Run::class,
         'smart:create'  => Commands\Create::class,
