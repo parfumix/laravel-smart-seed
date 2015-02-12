@@ -37,6 +37,19 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
         $this->app->singleton(self::IOC_ALIAS, function() {
             return new SeederFactory;
         });
+
+        self::setCommands();
+    }
+
+    /**
+     * Set commands ...
+     */
+    private function setCommands() {
+        $this->app->bindShared('smart:seeder',function() {
+           return new Commands\Seeder;
+        });
+
+        $this->commands(['smart:seeder']);
     }
 
     /**
