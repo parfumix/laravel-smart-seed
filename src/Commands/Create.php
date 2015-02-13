@@ -45,12 +45,12 @@ class Create extends AbstractCommand {
                 if( ! self::isClosure($closure))
                     throw new SeederException('Invalid closure declared to config file');
 
-                if( $files = $closure( $this->argument('source'), $env, $this->option('class') ) )
+                if( $files = $closure( $this->argument('source'), $env ) )
                     self::notifySources($files, 'created');
 
             } elseif( $provider instanceof ProviderInterface ) {
 
-                if( $files = $provider->create( $this->argument('source'), $env, $this->option('class') ) )
+                if( $files = $provider->create( $this->argument('source'), $env ) )
                     self::notifySources($files, 'created');
 
             }
