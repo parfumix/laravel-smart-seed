@@ -32,9 +32,6 @@ class Run extends AbstractCommand {
         try {
             parent::fire();
 
-            if(! $this->argument('source'))
-                throw new SeederException('Invalid source!');
-
             $env = self::detectEnvironment();
 
             $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
