@@ -84,9 +84,13 @@ class AbstractProvider {
     /**
      * Get configurations..
      *
+     * @param string $key
      * @return array
      */
-    public function getConfig() {
+    public function getConfig($key = '') {
+        if($key)
+            return $this->config[$key];
+
         return $this->config;
     }
 
