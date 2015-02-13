@@ -61,7 +61,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
                 return false;
             }
 
-            $fileName = trim(strtolower($name)) . '_' . trim(strtolower(self::getEnv())) . '.yaml';
+            $fileName = trim(strtolower($name)) . '_' . self::getEnv() . '.yaml';
             $fullPath = $path . DIRECTORY_SEPARATOR . $fileName;
 
             if( File::exists($fullPath)) {
