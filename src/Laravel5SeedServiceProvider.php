@@ -1,11 +1,10 @@
 <?php namespace LaravelSeed;
 
 use Illuminate\Support\ServiceProvider;
+use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Repositories\SeederDbRepository;
 
 class Laravel5SeedServiceProvider extends ServiceProvider {
-
-    const IOC_ALIAS = __NAMESPACE__;
 
     const SEED_TABLE = 'seeds';
 
@@ -41,13 +40,22 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        $this->app->singleton(self::IOC_ALIAS, function() {
-            return new SeederFactory;
+        $this->app->bindShared('smart.provider.factory', function($app, $params) {
+            list($source, $env) = $params;
+
+            $default = config('seeds.default');
+            $config  = config('seeds.providers.' . trim(strtolower($default)));
+
+            if( !isset($config['class']) )
+                return $config;
+
+            return new $config['class']($config, $source, $env);
         });
 
         $this->app->singleton('smart.seed.table', function($app, $params) {
-            list($source, $env) = $params;
-            return new TableSeeder($source, $env);
+            list($data, $command) = $params;
+
+            return new TableSeeder($data, $command);
         });
 
         $this->app->bindShared('smart.seed.repository', function($app) {
