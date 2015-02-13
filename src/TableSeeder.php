@@ -1,50 +1,39 @@
 <?php namespace LaravelSeed;
 
+use Illuminate\Console\Command;
+use LaravelSeed\Commands\AbstractCommand;
 use LaravelSeed\Contracts\ProviderInterface;
+use LaravelSeed\Exceptions\SeederException;
+use Symfony\Component\Finder\Finder;
 
 class TableSeeder {
 
     /**
-     * @var
+     * @var Command
      */
-    protected $provider;
+    private $command;
 
     /**
-     * @var string
+     * @var array
      */
-    private $source;
+    private $data;
 
     /**
-     * @var
+     * @param array $data
+     * @param Command $command
      */
-    private $env;
-
-    public function __construct($source = '', $env) {
-        $this->source = $source;
-        $this->env = $env;
-
-        self::setProvider( app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory(config('seeds.default')) );
-    }
-
-
-    /**
-     * Set provider instance ..
-     *
-     * @param ProviderInterface $provider
-     */
-    protected function setProvider(ProviderInterface $provider) {
-        if (!empty($this->provider)) {
-            $this->provider = $provider;
-        }
+    public function __construct(array $data, Command $command) {
+        $this->command = $command;
+        $this->data = $data;
     }
 
     /**
-     * Get provider instance ..
+     * Get command instance ..
      *
-     * @return mixed
+     * @return Command
      */
-    protected function getProvider() {
-        return $this->provider;
+    private function getCommand() {
+        return $this->command;
     }
 
     /**
@@ -54,8 +43,7 @@ class TableSeeder {
      * @return array
      */
     public function seed(array $seeds) {
-        $files = [];
-        array_walk($seeds, function($seed) use(&$files) {
+        array_walk($seeds, function($seed) {
             $class = $seed['class'];
 
             array_walk($seed['source'], function($source) use($class) {
@@ -63,9 +51,7 @@ class TableSeeder {
                 $classname::create($source);
             });
 
-            $files[] = $class;
+            self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
         });
-
-        return $files;
     }
 }
