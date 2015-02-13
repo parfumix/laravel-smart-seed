@@ -1,5 +1,9 @@
 <?php namespace LaravelSeed\Providers;
 
+use File;
+use LaravelSeed\Exceptions\SeederException;
+use Symfony\Component\Finder\Finder;
+
 class AbstractProvider {
 
     /**
@@ -21,12 +25,16 @@ class AbstractProvider {
      * @param array $config
      * @param string $source
      * @param $env
+     * @throws SeederException
      */
     public function __construct(array $config, $source = '', $env) {
 
         $this->config = $config;
         $this->source = $source;
         $this->env = $env;
+
+        if( ! File::isDirectory( self::getConfig()['path'] ) )
+            throw new SeederException('Invalid directory path.');
     }
 
     /**
@@ -56,7 +64,7 @@ class AbstractProvider {
      * @return mixed
      */
     public function getEnv() {
-        return $this->env;
+        return trim(strtolower($this->env));
     }
 
     /**
@@ -80,5 +88,26 @@ class AbstractProvider {
      */
     public function getConfig() {
         return $this->config;
+    }
+
+    /**
+     * Get files from specific path and $_ENV ..
+     *
+     * @param $path
+     * @param $env
+     * @return array
+     */
+    protected function getFiles($path, $env = '') {
+        if(! $env)
+            $env = self::getEnv();
+
+        $finder = new Finder;
+        $files  = [];
+        $finder->name('*_' . $env . '*');
+        foreach ($finder->in($path) as $file) {
+            $files[] = $file->getFilename();
+        }
+
+        return $files;
     }
 }
