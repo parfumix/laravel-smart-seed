@@ -38,11 +38,12 @@ class YamlProvider implements ProviderInterface {
      * Make source file ..
      *
      * @param $source
+     * @param $env
      * @param string $seeder
      * @throws SeederException
      * @return bool|mixed
      */
-    public function create($source, $seeder = '') {
+    public function create($source, $env, $seeder = '') {
         if( ! File::isDirectory($this->config['path']) )
             throw new SeederException('Invalid directory path.');
 
@@ -51,12 +52,12 @@ class YamlProvider implements ProviderInterface {
 
         $source = explode(',', $source);
         $files = [];
-        array_walk($source, function($name) use (&$files) {
-            #@todo If model doesn't exists than previous created files not showed ..
-            if( ! class_exists('App\\' . ucfirst(strtolower( $name ))) )
+        array_walk($source, function($name) use (&$files, $env) {
+            if( !self::isModelExists('App\\' . ucfirst(strtolower( $name ))) )
                 throw new SeederException('Invalid model class');
 
-            $fileName =  trim(strtolower($name)) . '.yaml';
+
+            $fileName =  trim(strtolower($name)) . '_' . trim(strtolower($env)) . '.yaml';
             $fullPath = $this->config['path'] . DIRECTORY_SEPARATOR . $fileName;
 
             if( File::exists($fullPath))
@@ -85,5 +86,19 @@ class YamlProvider implements ProviderInterface {
         $dumper = new Dumper;
 
         return $dumper->dump($data, $mode);
+    }
+
+    /**
+     * Check if model exists ..
+     *
+     * @param $name
+     * @return bool
+     */
+    private function isModelExists($name) {
+        if( ! class_exists($name) )
+            return false;
+
+        return true;
+
     }
 }
