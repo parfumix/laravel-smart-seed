@@ -67,6 +67,10 @@ class SeederDbRepository implements RepositoryInterface {
     public function rollBackTable() {
         if(! self::isTableExists())
             return true;
+
+        $this->connection()->getSchemaBuilder()->drop(self::getDefaultTable());
+
+        return true;
     }
 
     /**
