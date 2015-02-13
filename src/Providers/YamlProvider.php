@@ -3,10 +3,11 @@
 use File;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
+use LaravelSeed\Repositories\SeederDbRepository;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
-class YamlProvider implements ProviderInterface {
+class YamlProvider extends AbstractProvider implements ProviderInterface {
 
     /**
      * @var array
@@ -53,9 +54,10 @@ class YamlProvider implements ProviderInterface {
         $source = explode(',', $source);
         $files = [];
         array_walk($source, function($name) use (&$files, $env) {
-            if( !self::isModelExists('App\\' . ucfirst(strtolower( $name ))) )
-                throw new SeederException('Invalid model class');
+            $model = 'App\\' . ucfirst(strtolower( $name ));
 
+            if( !self::isModelExists($model) )
+                throw new SeederException('Invalid model class');
 
             $fileName =  trim(strtolower($name)) . '_' . trim(strtolower($env)) . '.yaml';
             $fullPath = $this->config['path'] . DIRECTORY_SEPARATOR . $fileName;
@@ -65,7 +67,9 @@ class YamlProvider implements ProviderInterface {
 
             File::put( $fullPath, self::toYaml([
                     'class'  => ucfirst($name),
-                    'source' => array( )
+                    'source' => self::toYaml(
+                        SeederDbRepository::getFieldsTable($model), 1
+                    )
                 ], 1
             ));
 
