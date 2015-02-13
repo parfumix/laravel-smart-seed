@@ -38,7 +38,7 @@ class SeederDbRepository implements RepositoryInterface {
      * Check if seeds table already exists ..
      */
     public function isTableExists() {
-        return $this->connection();
+        return $this->connection()->getSchemaBuilder()->hasTable(self::getDefaultTable());
     }
 
     /**
