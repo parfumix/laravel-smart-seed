@@ -1,6 +1,7 @@
 <?php namespace LaravelSeed\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use LaravelSeed\Contracts\RepositoryInterface;
 use LaravelSeed\Exceptions\SeederException;
 
@@ -29,13 +30,16 @@ class Install extends Command {
         try {
             $repository = app('smart.seed.repository');
 
+            Artisan::call('vendor:publish', ['--tag' => 'seed-config']);
+
+            $this->info('Publishing complete!');
+
             if( $repository->isTableExists() )
                 throw new SeederException('Table already has been migrated!');
 
             if( $repository->migrateTable() )
                 $this->info('Table has been migrated successfully!');
 
-            //#@todo publish from artisan config files ...
         } catch(SeederException $e) {
             $this->error($e->getMessage());
         }
