@@ -10,13 +10,18 @@ class SeederDbRepository implements RepositoryInterface {
      * @var ConnectionResolverInterface
      */
     private $manager;
+    /**
+     * @var
+     */
+    private $table;
 
     /**
      * @param ConnectionResolverInterface $manager
      */
-    public function __construct(ConnectionResolverInterface $manager) {
+    public function __construct(ConnectionResolverInterface $manager, $table) {
 
         $this->manager = $manager;
+        $this->table = $table;
     }
 
     /**
@@ -33,7 +38,7 @@ class SeederDbRepository implements RepositoryInterface {
      * Check if seeds table already exists ..
      */
     public function isTableExists() {
-        return false;
+        return $this->connection();
     }
 
     /**
@@ -79,6 +84,14 @@ class SeederDbRepository implements RepositoryInterface {
 
     }
 
+    /**
+     * Get default table .
+     *
+     * @return mixed
+     */
+    private function getDefaultTable() {
+        return $this->table;
+    }
 
     /**
      * Return manager instance ..
