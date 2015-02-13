@@ -9,9 +9,10 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
     const SEED_TABLE = 'seeds';
 
     protected $commands = [
-        'smart:install' => Commands\Install::class,
-        'smart:run'     => Commands\Run::class,
-        'smart:create'  => Commands\Create::class,
+        'smart:install'   => Commands\Install::class,
+        'smart:run'       => Commands\Run::class,
+        'smart:create'    => Commands\Create::class,
+        'smart:rollback'  => Commands\Rollback::class,
     ];
 
     /**
@@ -40,7 +41,7 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        $this->app->bindShared('smart.provider.factory', function($app, $params) {
+        $this->app->singleton('smart.provider.factory', function($app, $params) {
             list($source, $env) = $params;
 
             $default = config('seeds.default');
