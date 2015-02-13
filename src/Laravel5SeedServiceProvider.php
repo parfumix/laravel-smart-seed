@@ -32,10 +32,8 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
         /** Publish configuration file . */
         $this->publishes([
             realpath(__DIR__.'/../config/configuration.php') => config_path('seeds.php')
-        ], 'config');
+        ], 'seed-config');
     }
-
-
 
     /**
      * Register the service provider.
