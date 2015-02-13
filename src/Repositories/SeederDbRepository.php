@@ -12,6 +12,7 @@ class SeederDbRepository implements RepositoryInterface {
      * @var ConnectionResolverInterface
      */
     private $manager;
+
     /**
      * @var
      */
@@ -107,6 +108,7 @@ class SeederDbRepository implements RepositoryInterface {
         return Collection::make(
             $this->connection()->table(self::getDefaultTable())
                 ->where('env', '=', $env)
+                ->get(['*'])
         );
     }
 
