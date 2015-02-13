@@ -4,6 +4,10 @@ use LaravelSeed\Contracts\ProviderInterface;
 
 class TableSeeder {
 
+    /**
+     * @var
+     */
+    protected $provider;
 
     /**
      * @var string
@@ -18,16 +22,29 @@ class TableSeeder {
     public function __construct($source = '', $env) {
         $this->source = $source;
         $this->env = $env;
+
+        self::setProvider( app(Laravel5SeedServiceProvider::IOC_ALIAS)->factory(config('seeds.default')) );
     }
 
 
-
+    /**
+     * Set provider instance ..
+     *
+     * @param ProviderInterface $provider
+     */
     protected function setProvider(ProviderInterface $provider) {
-
+        if (!empty($this->provider)) {
+            $this->provider = $provider;
+        }
     }
 
+    /**
+     * Get provider instance ..
+     *
+     * @return mixed
+     */
     protected function getProvider() {
-
+        return $this->provider;
     }
 
     /**
