@@ -43,7 +43,7 @@ class TableSeeder {
         if(! $data)
             $data = $this->data;
 
-        array_walk($seeds, function($seed) {
+        array_walk($data, function($seed) {
             $class = $seed['class'];
 
             array_walk($seed['source'], function($source) use($class) {
