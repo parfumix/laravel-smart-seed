@@ -13,8 +13,9 @@ interface ProviderInterface {
      * Make an file source ..
      *
      * @param $source
+     * @param $env
      * @param string $seeder
      * @return mixed
      */
-    public function create($source, $seeder = '');
+    public function create($source, $env, $seeder = '');
 }
