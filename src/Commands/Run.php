@@ -30,7 +30,7 @@ class Run extends AbstractCommand {
         try {
             parent::fire();
 
-            App::make('smart.seed.table', [$this->argument('source'), self::detectEnvironment()]);
+            App::make('smart.seed.table', [$this->argument('source'), self::detectEnvironment()])->seed();
 
         } catch(SeederException $e) {
             $this->error($e->getMessage());
