@@ -4,6 +4,7 @@ use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Laravel5SeedServiceProvider as Provider;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Create extends AbstractCommand {
 
@@ -73,7 +74,9 @@ class Create extends AbstractCommand {
      * @return array
      */
     protected function getOptions() {
-        return [];
+        return [
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment the command should run under.', null],
+        ];
     }
 
 
