@@ -5,9 +5,10 @@ interface ProviderInterface {
     /**
      * Get an array of data ...
      *
+     * @param string $source
      * @return mixed
      */
-    public function getData();
+    public function getData($source = '');
 
     /**
      * Make an file source ..
