@@ -1,9 +1,6 @@
 <?php namespace LaravelSeed;
 
 use Illuminate\Console\Command;
-use LaravelSeed\Commands\AbstractCommand;
-use LaravelSeed\Contracts\ProviderInterface;
-use LaravelSeed\Exceptions\SeederException;
 use Symfony\Component\Finder\Finder;
 
 class TableSeeder {
@@ -39,10 +36,13 @@ class TableSeeder {
     /**
      * Seed data ...
      *
-     * @param array $seeds
+     * @param array $data
      * @return array
      */
-    public function seed(array $seeds) {
+    public function seed(array $data = []) {
+        if(! $data)
+            $data = $this->data;
+
         array_walk($seeds, function($seed) {
             $class = $seed['class'];
 
