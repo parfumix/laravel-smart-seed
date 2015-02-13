@@ -23,7 +23,7 @@ class SeederDbRepository implements RepositoryInterface {
      * @return mixed|void
      */
     public function connection($alias = '') {
-
+        return self::getManager()->connection($alias);
     }
 
     /**
@@ -74,6 +74,16 @@ class SeederDbRepository implements RepositoryInterface {
      */
     public function getSeeds($env) {
 
+    }
+
+
+    /**
+     * Return manager instance ..
+     *
+     * @return ConnectionResolverInterface
+     */
+    private function getManager() {
+        return $this->manager;
     }
 
 }
