@@ -17,8 +17,8 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "5.0.*",
-        "symfony/yaml": "dev-master",
-        "symfony/finder": "dev-master"
+        "symfony/yaml": "v2.6.4",
+        "symfony/finder": "v2.6.4"
     },
     "autoload": {
         "psr-4": {
