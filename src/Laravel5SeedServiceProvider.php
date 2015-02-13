@@ -7,6 +7,8 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
 
     const IOC_ALIAS = __NAMESPACE__;
 
+    const SEED_TABLE = 'seeds';
+
     protected $commands = [
         'smart:install' => Commands\Install::class,
         'smart:run'     => Commands\Run::class,
@@ -46,7 +48,7 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
         });
 
         $this->app->bindShared('smart.seed.repository', function($app) {
-           return new SeederDbRepository($app['db']);
+           return new SeederDbRepository($app['db'], self::SEED_TABLE);
         });
 
         self::setCommands();
