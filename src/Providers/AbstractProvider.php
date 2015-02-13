@@ -114,4 +114,18 @@ class AbstractProvider {
 
         return $files;
     }
+
+    /**
+     * Check if model exists ..
+     *
+     * @param $name
+     * @return bool
+     */
+    protected function isModelExists($name) {
+        if( ! class_exists($name) )
+            return false;
+
+        return true;
+
+    }
 }

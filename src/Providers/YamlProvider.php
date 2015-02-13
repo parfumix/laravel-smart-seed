@@ -93,18 +93,4 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
 
         return $dumper->dump($data, $mode);
     }
-
-    /**
-     * Check if model exists ..
-     *
-     * @param $name
-     * @return bool
-     */
-    private function isModelExists($name) {
-        if( ! class_exists($name) )
-            return false;
-
-        return true;
-
-    }
 }
