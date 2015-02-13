@@ -5,17 +5,17 @@ class AbstractProvider {
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var string
      */
-    private $source;
+    protected $source;
 
     /**
      * @var
      */
-    private $env;
+    protected $env;
 
     /**
      * @param array $config
@@ -71,5 +71,14 @@ class AbstractProvider {
      */
     public function getSource() {
         return $this->getSource();
+    }
+
+    /**
+     * Get configurations..
+     *
+     * @return array
+     */
+    public function getConfig() {
+        return $this->config;
     }
 }
