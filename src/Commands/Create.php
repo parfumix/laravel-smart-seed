@@ -1,5 +1,6 @@
 <?php namespace LaravelSeed\Commands;
 
+use App;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Laravel5SeedServiceProvider as Provider;
@@ -35,9 +36,10 @@ class Create extends AbstractCommand {
             if(! $this->argument('source'))
                 throw new SeederException('Invalid source!');
 
-            $env = self::detectEnvironment();
+            $env    = self::detectEnvironment();
+            $source = $this->argument('source');
 
-            $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
+            $provider = App::make('smart.provider.factory', [ $source, $env ]);
 
             if( is_array($provider) && !empty($provider['create'])  ) {
                 $closure = $provider['create'];
@@ -45,17 +47,13 @@ class Create extends AbstractCommand {
                 if( ! self::isClosure($closure))
                     throw new SeederException('Invalid closure declared to config file');
 
-                if( $files = $closure( $this->argument('source'), $env ) )
-                    self::notifySources($files, 'created');
-
+                $closure( $this->argument('source'), $env, $this );
             } elseif( $provider instanceof ProviderInterface ) {
 
-                if( $files = $provider->create( $this->argument('source'), $env ) )
-                    self::notifySources($files, 'created');
-
+                $provider->create($this);
             }
         } catch(SeederException $e) {
-            $this->error('\n' . $e->getMessage());
+            $this->error($e->getMessage());
         }
     }
 
