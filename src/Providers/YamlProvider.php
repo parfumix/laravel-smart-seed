@@ -19,7 +19,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
      * @return array|mixed
      */
     public function getData($source = '') {
-        $path = self::getConfig()['path'];
+        $path = self::getConfig('path');
         $files = [];
 
         if( $source ) {
@@ -46,7 +46,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
      * @return bool|mixed
      */
     public function create(Command $command) {
-        $path = self::getConfig()['path'];
+        $path = self::getConfig('path');
 
         if( ! File::isWritable( $path  ) )
             throw new SeederException('Path are not writable. Please chmod!');
