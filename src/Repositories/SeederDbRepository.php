@@ -49,7 +49,7 @@ class SeederDbRepository implements RepositoryInterface {
         if( self::isTableExists() )
             throw new SeederException('Table already exists!');
 
-        return $this->connection()->getSchemaBuilder()->create(self::getDefaultTable(), function(Blueprint $table) {
+        $this->connection()->getSchemaBuilder()->create(self::getDefaultTable(), function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('hash', 255);
@@ -57,6 +57,8 @@ class SeederDbRepository implements RepositoryInterface {
             $table->integer('batch');
             $table->index('id');
         });
+
+        return true;
     }
 
     /**
