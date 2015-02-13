@@ -1,6 +1,7 @@
 <?php namespace LaravelSeed\Repositories;
 
 use Illuminate\Database\ConnectionResolverInterface;
+use Illuminate\Database\Schema\Blueprint;
 use LaravelSeed\Contracts\RepositoryInterface;
 use LaravelSeed\Exceptions\SeederException;
 
@@ -47,6 +48,15 @@ class SeederDbRepository implements RepositoryInterface {
     public function migrateTable() {
         if( self::isTableExists() )
             throw new SeederException('Table already exists!');
+
+        return $this->connection()->getSchemaBuilder()->create(self::getDefaultTable(), function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('hash', 255);
+            $table->string('env');
+            $table->integer('batch');
+            $table->index('id');
+        });
     }
 
     /**
