@@ -20,20 +20,12 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
      */
     public function getData($source = '') {
         $path = self::getConfig()['path'];
-
-        if( ! File::isDirectory( $path ) )
-            throw new SeederException('Invalid directory path.');
-
         $files = [];
 
         if( $source ) {
-            $files[] = trim(strtolower($source)) .'_' . trim(strtolower(self::getEnv())) . '.yaml' ;
+            $files[] = trim(strtolower($source)) .'_' . self::getEnv() . '.yaml' ;
         } else {
-            $finder = new Finder;
-            $finder->name('*_' . trim(strtolower(self::getEnv())) . '*');
-            foreach ($finder->in(self::getConfig()['path']) as $file) {
-                $files[] = $file->getFilename();
-            }
+            $files   = self::getFiles( $path );
         }
 
         $yaml   = new Parser;
@@ -55,9 +47,6 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
      */
     public function create(Command $command) {
         $path = self::getConfig()['path'];
-
-        if( ! File::isDirectory($path) )
-            throw new SeederException('Invalid directory path.');
 
         if( ! File::isWritable( $path  ) )
             throw new SeederException('Path are not writable. Please chmod!');
