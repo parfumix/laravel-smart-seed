@@ -1,6 +1,7 @@
 <?php namespace LaravelSeed;
 
 use Illuminate\Support\ServiceProvider;
+use LaravelSeed\Repositories\SeederDbRepository;
 
 class Laravel5SeedServiceProvider extends ServiceProvider {
 
@@ -42,6 +43,10 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
     public function register() {
         $this->app->singleton(self::IOC_ALIAS, function() {
             return new SeederFactory;
+        });
+
+        $this->app->bindShared('smart.seed.repository', function($app) {
+           return new SeederDbRepository($app['db']);
         });
 
         self::setCommands();
