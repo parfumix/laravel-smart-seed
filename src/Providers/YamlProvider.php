@@ -28,14 +28,14 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
             $files   = self::getFiles( $path );
         }
 
-        $yaml   = new Parser;
+        $yaml      = new Parser;
 
         return array_map(function($file) use($yaml, $path) {
-            $fullPath = $path . DIRECTORY_SEPARATOR . $file;
+            $fullPath = $path . DIRECTORY_SEPARATOR . $file . '.yaml';
 
             if( File::exists($fullPath ))
                 return $yaml->parse(File::get($fullPath ));
-        }, $files);
+        }, self::diffFiles($files));
     }
 
     /**
