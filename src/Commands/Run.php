@@ -4,6 +4,8 @@ use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Laravel5SeedServiceProvider as Provider;
 use LaravelSeed\TableSeeder;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Run extends AbstractCommand {
 
@@ -29,6 +31,11 @@ class Run extends AbstractCommand {
     public function fire() {
         try {
             parent::fire();
+
+            if(! $this->argument('source'))
+                throw new SeederException('Invalid source!');
+
+            $env = self::detectEnvironment();
 
             $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
 
@@ -57,7 +64,9 @@ class Run extends AbstractCommand {
      * @return array
      */
     protected function getArguments() {
-        return [];
+        return [
+            ['source',    InputArgument::OPTIONAL, 'An source Eloquent model name to run.'],
+        ];
     }
 
     /**
@@ -66,7 +75,9 @@ class Run extends AbstractCommand {
      * @return array
      */
     protected function getOptions() {
-        return [];
+        return [
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment the command should run under.', null],
+        ];
     }
 
 
