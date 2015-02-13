@@ -3,7 +3,6 @@
 use File;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
-use LaravelSeed\Repositories\SeederDbRepository;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
@@ -68,7 +67,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
             File::put( $fullPath, self::toYaml([
                     'class'  => ucfirst($name),
                     'source' => self::toYaml(
-                        SeederDbRepository::getFieldsTable($model), 1
+                        self::getFieldsTable($model), 1
                     )
                 ], 1
             ));
