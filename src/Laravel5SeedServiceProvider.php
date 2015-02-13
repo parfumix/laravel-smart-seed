@@ -41,18 +41,6 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        $this->app->singleton('smart.provider.factory', function($app, $params) {
-            list($source, $env) = $params;
-
-            $default = config('seeds.default');
-            $config  = config('seeds.providers.' . trim(strtolower($default)));
-
-            if( !isset($config['class']) )
-                return $config;
-
-            return new $config['class']($config, $source, $env);
-        });
-
         $this->app->singleton('smart.seed.table', function($app, $params) {
             list($data, $command) = $params;
 

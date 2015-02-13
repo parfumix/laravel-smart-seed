@@ -4,6 +4,7 @@ use App;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Laravel5SeedServiceProvider as Provider;
+use LaravelSeed\ProviderFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -39,7 +40,7 @@ class Create extends AbstractCommand {
             $env    = self::detectEnvironment();
             $source = $this->argument('source');
 
-            $provider = App::make('smart.provider.factory', [ $source, $env ]);
+            $provider = ProviderFactory::factory( $source, $env );
 
             if( is_array($provider) && !empty($provider['create'])  ) {
                 $closure = $provider['create'];
