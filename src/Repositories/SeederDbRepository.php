@@ -11,6 +11,9 @@ class SeederDbRepository implements RepositoryInterface {
      */
     private $manager;
 
+    /**
+     * @param ConnectionResolverInterface $manager
+     */
     public function __construct(ConnectionResolverInterface $manager) {
 
         $this->manager = $manager;
