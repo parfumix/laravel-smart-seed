@@ -2,6 +2,7 @@
 
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Collection;
 use LaravelSeed\Contracts\RepositoryInterface;
 use LaravelSeed\Exceptions\SeederException;
 
@@ -77,9 +78,14 @@ class SeederDbRepository implements RepositoryInterface {
      * Get last batch number by _ENV
      *
      * @param $env
+     * @return static
      */
     public function getLastBatch($env) {
-
+        return Collection::make(
+            $this->connection()->table(self::getDefaultTable())
+                ->where('env', '=', $env)
+                ->max('batch')
+        );
     }
 
     /**
@@ -88,16 +94,20 @@ class SeederDbRepository implements RepositoryInterface {
      * @param $env
      */
     public function getNextBatch($env) {
-        return self::getLastBatch($env) + 1;
+        return self::getLastBatch($env)->first()->batch + 1;
     }
 
     /**
      * Get all seeds by the env ..
      *
      * @param $env
+     * @return static
      */
     public function getSeeds($env) {
-
+        return Collection::make(
+            $this->connection()->table(self::getDefaultTable())
+                ->where('env', '=', $env)
+        );
     }
 
     /**
