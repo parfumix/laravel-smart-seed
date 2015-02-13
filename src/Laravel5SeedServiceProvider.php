@@ -45,8 +45,9 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
             return new SeederFactory;
         });
 
-        $this->app->singleton('smart.seed.table', function() {
-            return new TableSeeder;
+        $this->app->singleton('smart.seed.table', function($app, $params) {
+            list($source, $env) = $params;
+            return new TableSeeder($source, $env);
         });
 
         $this->app->bindShared('smart.seed.repository', function($app) {
