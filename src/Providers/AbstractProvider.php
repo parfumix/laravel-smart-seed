@@ -70,7 +70,7 @@ class AbstractProvider {
      * @return mixed
      */
     public function getSource() {
-        return $this->getSource();
+        return $this->source;
     }
 
     /**
