@@ -1,6 +1,34 @@
 <?php namespace LaravelSeed;
 
+use LaravelSeed\Contracts\ProviderInterface;
+
 class TableSeeder {
+
+
+    /**
+     * @var string
+     */
+    private $source;
+
+    /**
+     * @var
+     */
+    private $env;
+
+    public function __construct($source = '', $env) {
+        $this->source = $source;
+        $this->env = $env;
+    }
+
+
+
+    protected function setProvider(ProviderInterface $provider) {
+
+    }
+
+    protected function getProvider() {
+
+    }
 
     /**
      * Seed data ...
@@ -8,7 +36,7 @@ class TableSeeder {
      * @param array $seeds
      * @return array
      */
-    public static function seed(array $seeds) {
+    public function seed(array $seeds) {
         $files = [];
         array_walk($seeds, function($seed) use(&$files) {
             $class = $seed['class'];
