@@ -6,8 +6,6 @@ use LaravelSeed\Repositories\SeederDbRepository;
 
 class Laravel5SeedServiceProvider extends ServiceProvider {
 
-    const SEED_TABLE = 'seeds';
-
     protected $commands = [
         'smart:install'   => Commands\Install::class,
         'smart:run'       => Commands\Run::class,
@@ -48,7 +46,7 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
         });
 
         $this->app->bindShared('smart.seed.repository', function($app) {
-           return new SeederDbRepository($app['db'], self::SEED_TABLE);
+           return new SeederDbRepository($app['db'], config('seeds.table'));
         });
 
         self::setCommands();
