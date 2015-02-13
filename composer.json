@@ -18,7 +18,7 @@
         "php": ">=5.4.0",
         "illuminate/support": "5.0.*",
         "symfony/yaml": "dev-master",
-        "symfony/finder": "2.7.*"
+        "symfony/finder": "dev-master"
     },
     "autoload": {
         "psr-4": {
