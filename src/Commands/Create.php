@@ -35,6 +35,8 @@ class Create extends AbstractCommand {
             if(! $this->argument('source'))
                 throw new SeederException('Invalid source!');
 
+            $env = self::detectEnvironment();
+
             $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
 
             if( is_array($provider) && !empty($provider['create'])  ) {
@@ -43,12 +45,12 @@ class Create extends AbstractCommand {
                 if( ! self::isClosure($closure))
                     throw new SeederException('Invalid closure declared to config file');
 
-                if( $files = $closure( $this->argument('source'), $this->option('class') ) )
+                if( $files = $closure( $this->argument('source'), $env, $this->option('class') ) )
                     self::notifySources($files, 'created');
 
             } elseif( $provider instanceof ProviderInterface ) {
 
-                if( $files = $provider->create( $this->argument('source'), $this->option('class') ) )
+                if( $files = $provider->create( $this->argument('source'), $env, $this->option('class') ) )
                     self::notifySources($files, 'created');
 
             }
