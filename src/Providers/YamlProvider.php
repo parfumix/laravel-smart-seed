@@ -1,6 +1,7 @@
 <?php namespace LaravelSeed\Providers;
 
 use File;
+use Illuminate\Console\Command;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use Symfony\Component\Finder\Finder;
@@ -48,32 +49,36 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
     /**
      * Make source file ..
      *
-     * @param $source
-     * @param $env
-     * @param string $seeder
+     * @param Command $command
      * @throws SeederException
      * @return bool|mixed
      */
-    public function create($source, $env, $seeder = '') {
-        if( ! File::isDirectory(self::getConfig()['path']) )
+    public function create(Command $command) {
+        $path = self::getConfig()['path'];
+
+        if( ! File::isDirectory($path) )
             throw new SeederException('Invalid directory path.');
 
-        if( ! File::isWritable( self::getConfig()['path'] ) )
+        if( ! File::isWritable( $path  ) )
             throw new SeederException('Path are not writable. Please chmod!');
 
-        $source = explode(',', $source);
-        $files = [];
-        array_walk($source, function($name) use (&$files, $env) {
+        $source = explode(',', self::getSource());
+
+        array_walk($source, function($name) use($path, $command) {
             $model = 'App\\' . ucfirst(strtolower( $name ));
 
-            if( !self::isModelExists($model) )
-                throw new SeederException('Invalid model class');
+            if( !self::isModelExists($model) ) {
+                $command->error(sprintf('Model %s not exists. Skipped!', $model));
+                return false;
+            }
 
-            $fileName =  trim(strtolower($name)) . '_' . trim(strtolower($env)) . '.yaml';
-            $fullPath = self::getConfig()['path'] . DIRECTORY_SEPARATOR . $fileName;
+            $fileName = trim(strtolower($name)) . '_' . trim(strtolower(self::getEnv())) . '.yaml';
+            $fullPath = $path . DIRECTORY_SEPARATOR . $fileName;
 
-            if( File::exists($fullPath))
-                throw new SeederException('Model already exists.');
+            if( File::exists($fullPath)) {
+                $command->error(sprintf('Model %s already exists. Skipped!', $fileName));
+                return false;
+            }
 
             File::put( $fullPath, self::toYaml([
                     'class'  => ucfirst($name),
@@ -83,10 +88,8 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
                 ], 1
             ));
 
-            $files[] = $fileName;
+            $command->info(sprintf('File %s created successfully!', $fileName));
         });
-
-        return $files;
     }
 
     /**
