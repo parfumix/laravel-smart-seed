@@ -1,9 +1,7 @@
 <?php namespace LaravelSeed\Commands;
 
-use LaravelSeed\Contracts\ProviderInterface;
+use App;
 use LaravelSeed\Exceptions\SeederException;
-use LaravelSeed\Laravel5SeedServiceProvider as Provider;
-use LaravelSeed\TableSeeder;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -32,26 +30,10 @@ class Run extends AbstractCommand {
         try {
             parent::fire();
 
-            $env = self::detectEnvironment();
+            app('smart.seed.table')->seed( $this->argument('source'), self::detectEnvironment() );
 
-            $provider = app(Provider::IOC_ALIAS)->factory(config('seeds.default'));
-
-            if( is_array($provider) && !empty($provider['run']) ) {
-                $closure = $provider['run'];
-
-                if( ! self::isClosure($closure))
-                    throw new SeederException('Invalid closure declared to config file');
-
-                if( $files = TableSeeder::seed($closure()) )
-                    self::notifySources($files, 'seeded');
-
-            } elseif( $provider instanceof ProviderInterface ) {
-                if( $files = TableSeeder::seed($provider->getData()) )
-                    self::notifySources($files, 'seeded');
-
-            }
         } catch(SeederException $e) {
-            $this->error('\n' . $e->getMessage());
+            $this->error($e->getMessage());
         }
     }
 
