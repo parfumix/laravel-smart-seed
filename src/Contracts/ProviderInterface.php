@@ -1,5 +1,8 @@
 <?php namespace LaravelSeed\Contracts;
 
+
+use Illuminate\Console\Command;
+
 interface ProviderInterface {
 
     /**
@@ -13,10 +16,8 @@ interface ProviderInterface {
     /**
      * Make an file source ..
      *
-     * @param $source
-     * @param $env
-     * @param string $seeder
+     * @param Command $command
      * @return mixed
      */
-    public function create($source, $env, $seeder = '');
+    public function create(Command $command);
 }
