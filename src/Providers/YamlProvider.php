@@ -23,7 +23,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
         if( $source ) {
             $files[] = trim(strtolower($source)) .'_' . self::getEnv() . '.yaml' ;
         } else {
-            $files   = self::getFiles( $path );
+            $files   = getFilesFromPathByEnv( $path ,self::getEnv() );
         }
 
         $yaml      = new Parser;
