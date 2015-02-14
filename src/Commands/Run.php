@@ -47,7 +47,7 @@ class Run extends AbstractCommand {
                $data = $closure( $source, $env, $this );
 
             } elseif( $provider instanceof ProviderInterface ) {
-                $data =  $provider->getData();
+                $data =  $provider->getData($source);
             }
 
             App::make('smart.seed.table', [$data, $this])->seed($env);
