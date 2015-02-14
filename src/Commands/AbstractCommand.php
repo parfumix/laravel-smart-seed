@@ -30,7 +30,7 @@ abstract class AbstractCommand extends Command {
      * @param array $files
      * @param $operation
      */
-    protected function notifySources(array $files, $operation) {
+    public function notifySources(array $files, $operation) {
         array_walk($files, function($file) use($operation) {
             $this->info(sprintf('File "%s" %s successfully!', $file, $operation));
         });
@@ -42,7 +42,7 @@ abstract class AbstractCommand extends Command {
      * @param $var
      * @return bool
      */
-    protected static function isClosure($var) {
+    public static function isClosure($var) {
         if( is_object( $var ) && ($var instanceof Closure) )
             return true;
 
