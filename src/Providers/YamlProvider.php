@@ -71,7 +71,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
             File::put( $fullPath, arrayToYaml([
                     'class'  => ucfirst($name),
                     'source' => arrayToYaml(
-                        self::getFieldsTable($model), 1
+                        getTableSchema($model), 1
                     )
                 ], 1
             ));
