@@ -46,9 +46,10 @@ class TableSeeder {
         }
 
         $seedRepository = app('smart.seed.repository');
+        $batch = $seedRepository->getNextBatch($env);
 
-        DB::transaction(function() use($seedRepository, $env, $data) {
-            array_walk($data, function($seed) use($seedRepository, $env) {
+        DB::transaction(function() use($seedRepository, $env, $data, $batch) {
+            array_walk($data, function($seed) use($seedRepository, $env, $batch) {
                 $class = $seed['class'];
 
                 array_walk($seed['source'], function($source) use($class) {
@@ -56,7 +57,7 @@ class TableSeeder {
                     $classname::create($source);
                 });
 
-                $seedRepository->addSeed(strtolower($class) . '_' . $env, 'hash', $env);
+                $seedRepository->addSeed(strtolower($class) . '_' . $env, 'hash', $env, $batch);
 
                 self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
             });

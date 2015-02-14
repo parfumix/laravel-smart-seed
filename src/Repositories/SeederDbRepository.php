@@ -125,14 +125,16 @@ class SeederDbRepository implements RepositoryInterface {
      * @param $name
      * @param $hash
      * @param $env
+     * @param $batch
+     * @return
      */
-    public function addSeed($name, $hash, $env) {
+    public function addSeed($name, $hash, $env, $batch) {
         return $this->connection()->table(self::getDefaultTable())
            ->insert([
                'name'   => $name,
                'hash'   => $hash,
                'env'    => $env,
-               'batch'  => self::getNextBatch($env),
+               'batch'  => $batch,
            ]);
     }
 
