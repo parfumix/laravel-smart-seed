@@ -40,9 +40,9 @@ class Laravel5SeedServiceProvider extends ServiceProvider {
      */
     public function register() {
         $this->app->singleton('smart.seed.table', function($app, $params) {
-            list($data, $command) = $params;
+            list($command) = $params;
 
-            return new TableSeeder($data, $command);
+            return new TableSeeder($command);
         });
 
         $this->app->singleton('smart.seed.repository', function($app) {
