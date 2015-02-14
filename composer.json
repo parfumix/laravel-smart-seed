@@ -21,6 +21,7 @@
         "symfony/finder": "v2.6.4"
     },
     "autoload": {
+        "files": [ "src/Helpers.php" ],
         "psr-4": {
             "LaravelSeed\\": "src"
         }
