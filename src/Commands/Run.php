@@ -32,7 +32,6 @@ class Run extends AbstractCommand {
         try {
             parent::fire();
 
-            $data   = [];
             $env    = self::detectEnvironment();
             $source = $this->argument('source');
 
@@ -44,16 +43,16 @@ class Run extends AbstractCommand {
                 if( ! self::isClosure($closure))
                     throw new SeederException('Invalid closure declared to config file');
 
-               $data = $closure( $source, $env, $this );
+               $collection = $closure( $source, $env, $this );
 
             } elseif( $provider instanceof ProviderInterface ) {
-                $data =  $provider->getData($source);
+                $collection =  $provider->getData($source);
             }
 
-            if(! $data)
+            if( $collection->isEmpty() )
                 throw new SeederException('No seeds data!');
 
-            App::make('smart.seed.table', [$this])->seed($data, $env);
+            App::make('smart.seed.table', [$this])->seed($collection, $env);
 
         } catch(SeederException $e) {
             $this->error($e->getMessage());
