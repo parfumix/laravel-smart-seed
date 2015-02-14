@@ -20,7 +20,7 @@ if( !function_exists('getFilesFromPathByEnv')) {
     function getFilesFromPathByEnv($path, $env = '') {
         $finder = new Symfony\Component\Finder\Finder;
         $files  = [];
-        $finder->name('*_' . $env . '*');
+        $finder->name("/\\_".$env."\\.(\\w{2,3})$/i");
         foreach ($finder->in($path) as $file) {
             $files[] = $file->getFilename();
         }
