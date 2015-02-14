@@ -1,7 +1,6 @@
 <?php namespace LaravelSeed;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelSeed\Exceptions\SeederException;
 use LaravelSeed\Repositories\SeederDbRepository;
 
 class Laravel5SeedServiceProvider extends ServiceProvider {

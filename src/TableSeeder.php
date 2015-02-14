@@ -3,7 +3,6 @@
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Symfony\Component\Finder\Finder;
 
 class TableSeeder {
 
