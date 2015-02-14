@@ -62,12 +62,11 @@ class TableSeeder {
     public function rollback(Collection $seeds) {
         DB::transaction(function() use($seeds) {
            $seeds->map(function($seed) {
-               $class = current(explode('_', $seed->name));
+               $class     = current(explode('_', $seed->name));
                $classname = 'App\\' . ucfirst($class);
 
-               if(! class_exists($classname)) {
+               if(! isEloquentExists($classname)) {
                    self::getCommand()->error(sprintf('Class %s do not exists. Skipped!', $classname));
-
                    return false;
                }
 

@@ -48,7 +48,7 @@ class Create extends AbstractCommand {
                 if( ! self::isClosure($closure))
                     throw new SeederException('Invalid closure declared to config file');
 
-                $closure( $this->argument('source'), $env, $this );
+                $closure( $source, $env, $this );
             } elseif( $provider instanceof ProviderInterface ) {
 
                 $provider->create($this);
