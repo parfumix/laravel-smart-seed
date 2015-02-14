@@ -94,9 +94,10 @@ class SeederDbRepository implements RepositoryInterface {
      * Get next batch number ..
      *
      * @param $env
+     * @return \LaravelSeed\Repositories\SeederDbRepository
      */
     public function getNextBatch($env) {
-        return self::getLastBatch($env)->first()->batch + 1;
+        return self::getLastBatch($env) + 1;
     }
 
     /**
@@ -126,7 +127,7 @@ class SeederDbRepository implements RepositoryInterface {
                'name'   => $name,
                'hash'   => $hash,
                'env'    => $env,
-             #  'batch'  => self::getNextBatch($env),
+               'batch'  => self::getNextBatch($env),
            ]);
     }
 
