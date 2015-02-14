@@ -1,5 +1,6 @@
 <?php namespace LaravelSeed;
 
+use DB;
 use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
 
@@ -39,27 +40,26 @@ class TableSeeder {
      * @return array
      */
     public function seed($env) {
-        $data = $this->data;
-
-        if(! $data) {
+        if(! $data = $this->data) {
             self::getCommand()->info('No have seeds!');
-
             return false;
         }
 
         $seedRepository = app('smart.seed.repository');
 
-        array_walk($data, function($seed) use($seedRepository, $env) {
-            $class = $seed['class'];
+        DB::transaction(function() use($seedRepository, $env, $data) {
+            array_walk($data, function($seed) use($seedRepository, $env) {
+                $class = $seed['class'];
 
-            array_walk($seed['source'], function($source) use($class) {
-                $classname = 'App\\' . $class;
-                $classname::create($source);
+                array_walk($seed['source'], function($source) use($class) {
+                    $classname = 'App\\' . $class;
+                    $classname::create($source);
+                });
+
+                $seedRepository->addSeed(strtolower($class) . '_' . $env, 'hash', $env);
+
+                self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
             });
-
-            $seedRepository->addSeed(strtolower($class) . '_' . $env, 'hash', $env);
-
-            self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
         });
     }
 }
