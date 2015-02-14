@@ -24,17 +24,6 @@ abstract class AbstractCommand extends Command {
         return App::environment();
     }
 
-    /**
-     * Notify user recent created files .
-     *
-     * @param array $files
-     * @param $operation
-     */
-    public function notifySources(array $files, $operation) {
-        array_walk($files, function($file) use($operation) {
-            $this->info(sprintf('File "%s" %s successfully!', $file, $operation));
-        });
-    }
 
     /**
      * Check if current $var is Closure type ..
