@@ -63,3 +63,19 @@ if( !function_exists('getDiffFiles')) {
         return array_diff($files, $filenameSeeded);
     }
 }
+
+/**
+ * Get columns from specific table ..
+ */
+if( !function_exists('getTableSchema')) {
+
+    function getTableSchema($table) {
+        if( !is_object($table))
+            $table = new $table;
+
+        $fields = \DB::getSchemaBuilder()
+            ->getColumnListing( $table->getTable() );
+
+        return $fields;
+    }
+}
