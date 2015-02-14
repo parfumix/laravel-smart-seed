@@ -1,11 +1,9 @@
 <?php namespace LaravelSeed\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use LaravelSeed\Contracts\RepositoryInterface;
 use LaravelSeed\Exceptions\SeederException;
 
-class Install extends Command {
+class Install extends AbstractCommand {
 
     /**
      * The console command name.
