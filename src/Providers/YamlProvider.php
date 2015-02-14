@@ -8,7 +8,6 @@ use Symfony\Component\Yaml\Parser;
 
 class YamlProvider extends AbstractProvider implements ProviderInterface {
 
-
     /**
      * Return an array of data to be parsed ...
      *
@@ -28,12 +27,14 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
 
         $yaml      = new Parser;
 
+        $seededFiles = app('smart.seed.repository')->getSeeds( self::getEnv() );
+
         return array_map(function($file) use($yaml, $path) {
             $fullPath = $path . DIRECTORY_SEPARATOR . $file . '.yaml';
 
             if( File::exists($fullPath ))
                 return $yaml->parse(File::get($fullPath ));
-        }, self::diffFiles($files));
+        }, getDiffFiles($files , $seededFiles));
     }
 
     /**
