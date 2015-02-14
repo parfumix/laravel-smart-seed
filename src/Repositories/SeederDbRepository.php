@@ -85,8 +85,9 @@ class SeederDbRepository implements RepositoryInterface {
         return Collection::make(
             $this->connection()->table(self::getDefaultTable())
                 ->where('env', '=', $env)
-                ->max('batch')
-        );
+                ->orderBy('batch', 'desc')
+                ->get(['batch'])
+        )->first()->batch;
     }
 
     /**
@@ -110,6 +111,23 @@ class SeederDbRepository implements RepositoryInterface {
                 ->where('env', '=', $env)
                 ->get(['*'])
         );
+    }
+
+    /**
+     * Insert an seed ..
+     *
+     * @param $name
+     * @param $hash
+     * @param $env
+     */
+    public function addSeed($name, $hash, $env) {
+        return $this->connection()->table(self::getDefaultTable())
+           ->insert([
+               'name'   => $name,
+               'hash'   => $hash,
+               'env'    => $env,
+             #  'batch'  => self::getNextBatch($env),
+           ]);
     }
 
     /**
