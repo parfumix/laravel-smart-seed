@@ -2,6 +2,7 @@
 
 use App;
 use LaravelSeed\Exceptions\SeederException;
+use Symfony\Component\Console\Input\InputOption;
 
 class Rollback extends AbstractCommand {
 
@@ -59,7 +60,9 @@ class Rollback extends AbstractCommand {
      * @return array
      */
     protected function getOptions() {
-        return [];
+        return [
+            ['env', null, InputOption::VALUE_OPTIONAL, 'The environment the command should run under.', null],
+        ];
     }
 
 
