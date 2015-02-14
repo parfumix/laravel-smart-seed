@@ -50,7 +50,10 @@ class Run extends AbstractCommand {
                 $data =  $provider->getData($source);
             }
 
-            App::make('smart.seed.table', [$data, $this])->seed($env);
+            if(! $data)
+                throw new SeederException('No seeds data!');
+
+            App::make('smart.seed.table', [$this])->seed($data, $env);
 
         } catch(SeederException $e) {
             $this->error($e->getMessage());
