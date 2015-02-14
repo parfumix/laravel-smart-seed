@@ -30,3 +30,19 @@ if( !function_exists('getFilesFromPathByEnv')) {
         return $files;
     }
 }
+
+/**
+ * Check if Eloquent model exists ..
+ */
+if(! function_exists('isEloquentExists')) {
+
+    function isEloquentExists($class) {
+        if( !preg_match('/^app/i', $class) )
+            $class = 'App\\' . $class;
+
+        if(! class_exists($class))
+            return false;
+
+        return true;
+    }
+}
