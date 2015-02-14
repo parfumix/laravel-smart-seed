@@ -36,20 +36,22 @@ class TableSeeder {
     /**
      * Seed data ...
      *
-     * @param array $data
      * @return array
      */
-    public function seed(array $data = []) {
-        if(! $data)
-            $data = $this->data;
+    public function seed($env) {
+        $data = $this->data;
 
-        array_walk($data, function($seed) {
+        $seedRepository = app('smart.seed.repository');
+
+        array_walk($data, function($seed) use($seedRepository, $env) {
             $class = $seed['class'];
 
             array_walk($seed['source'], function($source) use($class) {
                 $classname = 'App\\' . $class;
                 $classname::create($source);
             });
+
+            $seedRepository->addSeed($class, 'hash', $env);
 
             self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
         });
