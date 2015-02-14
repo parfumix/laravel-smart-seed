@@ -109,14 +109,17 @@ class SeederDbRepository implements RepositoryInterface {
      * Get all seeds by the env ..
      *
      * @param $env
+     * @param string $batch
      * @return static
      */
-    public function getSeeds($env) {
-        return Collection::make(
-            $this->connection()->table(self::getDefaultTable())
-                ->where('env', '=', $env)
-                ->get(['*'])
-        );
+    public function getSeeds($env, $batch = '') {
+        $query =  $this->connection()->table(self::getDefaultTable())
+            ->where('env', '=', $env);
+
+        if( $batch )
+            $query->whhere('batch', '=', $batch);
+
+        return Collection::make($query ->get(['*']));
     }
 
     /**
