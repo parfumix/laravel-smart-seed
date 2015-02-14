@@ -32,7 +32,7 @@ if( !function_exists('getFilesFromPathByEnv')) {
 /**
  * Check if Eloquent model exists ..
  */
-if(! function_exists('isEloquentExists')) {
+if( !function_exists('isEloquentExists')) {
 
     function isEloquentExists($class) {
         if( !preg_match('/^app/i', $class) )
@@ -42,5 +42,24 @@ if(! function_exists('isEloquentExists')) {
             return false;
 
         return true;
+    }
+}
+
+/**
+ * Get diff files from seeded and local ..
+ */
+if( !function_exists('getDiffFiles')) {
+
+    function getDiffFiles(array $files, \Illuminate\Support\Collection $seedFiles) {
+        $filenameSeeded = array_map(function($file) {
+            return $file->name;
+        }, $seedFiles->toArray());
+
+        $files = array_map(function($file) {
+            $file = explode('.', $file);
+            return $file[0];
+        }, $files);
+
+        return array_diff($files, $filenameSeeded);
     }
 }
