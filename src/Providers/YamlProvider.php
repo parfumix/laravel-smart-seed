@@ -54,7 +54,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
         array_walk($source, function($name) use($path, $command) {
             $model = 'App\\' . ucfirst(strtolower( $name ));
 
-            if( !self::isModelExists($model) ) {
+            if( ! isEloquentExists($model) ) {
                 $command->error(sprintf('Model %s not exists. Skipped!', $model));
                 return false;
             }
