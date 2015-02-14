@@ -20,9 +20,9 @@ if( !function_exists('getFilesFromPathByEnv')) {
     function getFilesFromPathByEnv($path, $env = '') {
         $finder = new Symfony\Component\Finder\Finder;
         $files  = [];
-        $finder->name("/\\_".$env."\\.(\\w{2,3})$/i");
+        $finder->name("/\_".strtolower(trim($env))."\.(\w{1,4})$/i");
         foreach ($finder->in($path) as $file) {
-            $files[] = $file->getFilename();
+            $files[] = $file->getPath() . '/' .$file->getFilename();
         }
 
         return $files;
@@ -55,9 +55,9 @@ if( !function_exists('getDiffFiles')) {
             return $file->name;
         }, $seedFiles->toArray());
 
+
         $files = array_map(function($file) {
-            $file = explode('.', $file);
-            return $file[0];
+            return pathinfo($file)['filename'];
         }, $files);
 
         return array_diff($files, $filenameSeeded);
