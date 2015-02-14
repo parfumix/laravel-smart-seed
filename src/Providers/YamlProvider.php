@@ -25,16 +25,11 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
             $files   = getFilesFromPathByEnv( $path ,self::getEnv() );
         }
 
-        $yaml      = new Parser;
-
         $seededFiles = app('smart.seed.repository')->getSeeds( self::getEnv() );
 
-        return array_map(function($file) use($yaml, $path) {
-            $fullPath = $path . DIRECTORY_SEPARATOR . $file . '.yaml';
+        $diffFiles = getDiffFiles($files , $seededFiles);
 
-            if( File::exists($fullPath ))
-                return $yaml->parse(File::get($fullPath ));
-        }, getDiffFiles($files , $seededFiles));
+        return self::parseYamlFiles($diffFiles);
     }
 
     /**
@@ -78,5 +73,28 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
 
             $command->info(sprintf('File %s created successfully!', $fileName));
         });
+    }
+
+    /**
+     * Parse yaml files in path ..
+     *
+     * @param array $files
+     * @param string $path
+     * @return \Illuminate\Support\Collection
+     */
+    private function parseYamlFiles(array $files = [], $path = '') {
+        if(! $path)
+            $path = self::getConfig('path');
+
+        $yaml      = new Parser;
+
+        return collect(
+            array_map(function($file) use($yaml, $path) {
+                $fullPath = $path . DIRECTORY_SEPARATOR . $file . '.yaml';
+
+                if( File::exists($fullPath ))
+                    return $yaml->parse( File::get($fullPath) );
+            }, $files)
+        );
     }
 }
