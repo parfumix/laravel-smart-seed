@@ -94,27 +94,4 @@ class AbstractProvider {
 
         return $this->config;
     }
-
-    /**
-     * Get diff files ...
-     *
-     * @param $files
-     * @param Collection $seededFiles
-     * @return array
-     */
-    protected function diffFiles($files, Collection $seededFiles = null) {
-        if(! $seededFiles)
-            $seededFiles = app('smart.seed.repository')->getSeeds( self::getEnv() );
-
-        $filenameSeeded = array_map(function($file) {
-            return $file->name;
-        }, $seededFiles->toArray());
-
-        $files = array_map(function($file) {
-            $file = explode('.', $file);
-            return $file[0];
-        }, $files);
-
-        return array_diff($files, $filenameSeeded);
-    }
 }
