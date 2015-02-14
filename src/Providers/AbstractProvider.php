@@ -96,27 +96,6 @@ class AbstractProvider {
     }
 
     /**
-     * Get files from specific path and $_ENV ..
-     *
-     * @param $path
-     * @param $env
-     * @return array
-     */
-    protected function getFiles($path, $env = '') {
-        if(! $env)
-            $env = self::getEnv();
-
-        $finder = new Finder;
-        $files  = [];
-        $finder->name('*_' . $env . '*');
-        foreach ($finder->in($path) as $file) {
-            $files[] = $file->getFilename();
-        }
-
-        return $files;
-    }
-
-    /**
      * Check if model exists ..
      *
      * @param $name
