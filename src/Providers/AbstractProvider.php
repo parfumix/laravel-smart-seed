@@ -1,9 +1,7 @@
 <?php namespace LaravelSeed\Providers;
 
 use File;
-use Illuminate\Support\Collection;
 use LaravelSeed\Exceptions\SeederException;
-use Symfony\Component\Finder\Finder;
 
 class AbstractProvider {
 
