@@ -69,9 +69,9 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
                 return false;
             }
 
-            File::put( $fullPath, self::toYaml([
+            File::put( $fullPath, arrayToYaml([
                     'class'  => ucfirst($name),
-                    'source' => self::toYaml(
+                    'source' => arrayToYaml(
                         self::getFieldsTable($model), 1
                     )
                 ], 1
@@ -79,18 +79,5 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
 
             $command->info(sprintf('File %s created successfully!', $fileName));
         });
-    }
-
-    /**
-     * To Yaml converter ...
-     *
-     * @param array $data
-     * @param int $mode
-     * @return string
-     */
-    private function toYaml(array $data,  $mode = 1) {
-        $dumper = new Dumper;
-
-        return $dumper->dump($data, $mode);
     }
 }
