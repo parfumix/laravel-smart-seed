@@ -82,12 +82,17 @@ class SeederDbRepository implements RepositoryInterface {
      * @return static
      */
     public function getLastBatch($env) {
-        return Collection::make(
+        $batch = Collection::make(
             $this->connection()->table(self::getDefaultTable())
                 ->where('env', '=', $env)
                 ->orderBy('batch', 'desc')
                 ->get(['batch'])
-        )->first()->batch;
+        )->first();
+
+        if( isset($batch) )
+            return $batch->batch;
+
+        return 0;
     }
 
     /**
