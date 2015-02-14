@@ -1,10 +1,9 @@
 <?php namespace LaravelSeed\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
+use App;
 use LaravelSeed\Exceptions\SeederException;
 
-class Rollback extends Command {
+class Rollback extends AbstractCommand {
 
     /**
      * The console command name.
@@ -27,6 +26,18 @@ class Rollback extends Command {
      */
     public function fire() {
         try {
+            parent::fire();
+
+            $repository = app('smart.seed.repository');
+            $env        = self::detectEnvironment();
+
+            $lastBatch     = $repository->getLastBatch( $env );
+            $rollbackSeeds = $repository->getSeeds($env, $lastBatch) ;
+
+            if(! count($rollbackSeeds))
+                throw new SeederException('No seeds to rollback!');
+
+            App::make('smart.seed.table', [$this])->rollback($rollbackSeeds);
 
         } catch(SeederException $e) {
             $this->error($e->getMessage());
