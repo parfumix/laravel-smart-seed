@@ -41,6 +41,12 @@ class TableSeeder {
     public function seed($env) {
         $data = $this->data;
 
+        if(! $data) {
+            self::getCommand()->info('No have seeds!');
+
+            return false;
+        }
+
         $seedRepository = app('smart.seed.repository');
 
         array_walk($data, function($seed) use($seedRepository, $env) {
@@ -51,7 +57,7 @@ class TableSeeder {
                 $classname::create($source);
             });
 
-            $seedRepository->addSeed($class, 'hash', $env);
+            $seedRepository->addSeed(strtolower($class) . '_' . $env, 'hash', $env);
 
             self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
         });
