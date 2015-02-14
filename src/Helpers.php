@@ -3,7 +3,6 @@
 /**
  * Convert data from array to yaml format .
  */
-
 if( !function_exists('arrayToYaml') ) {
 
     function arrayToYaml(array $array, $mode = 1) {
@@ -12,7 +11,6 @@ if( !function_exists('arrayToYaml') ) {
         return $dumper->dump($array, $mode);
     }
 }
-
 
 /**
  * Get files from specific path by env ..
