@@ -2,6 +2,7 @@
 
 use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Symfony\Component\Finder\Finder;
 
 class TableSeeder {
@@ -12,17 +13,10 @@ class TableSeeder {
     private $command;
 
     /**
-     * @var array
-     */
-    private $data;
-
-    /**
-     * @param array $data
      * @param Command $command
      */
-    public function __construct(array $data, Command $command) {
+    public function __construct( Command $command) {
         $this->command = $command;
-        $this->data = $data;
     }
 
     /**
@@ -37,14 +31,11 @@ class TableSeeder {
     /**
      * Seed data ...
      *
+     * @param array $data
+     * @param $env
      * @return array
      */
-    public function seed($env) {
-        if(! $data = $this->data) {
-            self::getCommand()->info('No have seeds!');
-            return false;
-        }
-
+    public function seed(array $data, $env) {
         $seedRepository = app('smart.seed.repository');
         $batch = $seedRepository->getNextBatch($env);
 
@@ -61,6 +52,32 @@ class TableSeeder {
 
                 self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
             });
+        });
+    }
+
+    /**
+     * Rollback seeds ...
+     *
+     * @param Collection $seeds
+     */
+    public function rollback(Collection $seeds) {
+        DB::transaction(function() use($seeds) {
+           $seeds->map(function($seed) {
+               $class = current(explode('_', $seed->name));
+               $classname = 'App\\' . ucfirst($class);
+
+               if(! class_exists($classname)) {
+                   self::getCommand()->error(sprintf('Class %s do not exists. Skipped!', $classname));
+
+                   return false;
+               }
+
+               $obj = new $classname;
+               DB::table( $obj->getTable() )->delete();
+               DB::table(config('seeds.table'))->where('id', '=', $seed->id)->delete();
+
+               self::getCommand()->info(sprintf('Class %s rollback successfully!', $classname));
+           });
         });
     }
 }
