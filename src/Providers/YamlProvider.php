@@ -4,8 +4,6 @@ use File;
 use Illuminate\Console\Command;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
 class YamlProvider extends AbstractProvider implements ProviderInterface {
