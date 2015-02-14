@@ -117,7 +117,7 @@ class SeederDbRepository implements RepositoryInterface {
             ->where('env', '=', $env);
 
         if( $batch )
-            $query->whhere('batch', '=', $batch);
+            $query->where('batch', '=', $batch);
 
         return Collection::make($query ->get(['*']));
     }
