@@ -2,32 +2,33 @@
 
 use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use LaravelSeed\Contracts\ProviderInterface;
 use LaravelSeed\Exceptions\SeederException;
 use Symfony\Component\Yaml\Parser;
 
 class YamlProvider extends AbstractProvider implements ProviderInterface {
 
+    const PROVIDER_EXT = 'yaml';
+
     /**
      * Return an array of data to be parsed ...
      *
      * @param string $source
-     * @throws SeederException
+     * @param Collection $seeded
      * @return array|mixed
      */
-    public function getData($source = '') {
+    public function getData($source = '', Collection $seeded) {
         $path = self::getConfig('path');
         $files = [];
 
         if( $source ) {
-            $files[] = trim(strtolower($source)) .'_' . self::getEnv() . '.yaml' ;
+            $files[] = trim(strtolower($source)) .'_' . self::getEnv() . '.' . self::PROVIDER_EXT ;
         } else {
             $files   = getFilesFromPathByEnv( $path ,self::getEnv() );
         }
 
-        $seededFiles = app('smart.seed.repository')->getSeeds( self::getEnv() );
-
-        $diffFiles = getDiffFiles($files , $seededFiles);
+        $diffFiles = getDiffFiles($files , $seeded, $path, self::PROVIDER_EXT);
 
         return self::parseYamlFiles($diffFiles);
     }
@@ -90,10 +91,8 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
 
         return collect(
             array_map(function($file) use($yaml, $path) {
-                $fullPath = $path . DIRECTORY_SEPARATOR . $file . '.yaml';
-
-                if( File::exists($fullPath ))
-                    return $yaml->parse( File::get($fullPath) );
+                if( File::exists($file ))
+                    return $yaml->parse( File::get($file) ) + ['hash' => filemtime($file)];
             }, $files)
         );
     }
