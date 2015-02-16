@@ -50,17 +50,32 @@ if( !function_exists('isEloquentExists')) {
  */
 if( !function_exists('getDiffFiles')) {
 
-    function getDiffFiles(array $files, \Illuminate\Support\Collection $seedFiles) {
-        $filenameSeeded = array_map(function($file) {
-            return $file->name;
-        }, $seedFiles->toArray());
+    function getDiffFiles(array $files, \Illuminate\Support\Collection $seeded, $pathProvider, $ext) {
+        $edited = [];
+        array_map(function($seed) use($files, $pathProvider, $ext, &$edited) {
+            $fullPath = $pathProvider . '/' . $seed->name . '.' . $ext;
 
+            if(! in_array($fullPath, $files))
+                return false;
 
-        $files = array_map(function($file) {
-            return pathinfo($file)['filename'];
-        }, $files);
+            $key       = array_search($fullPath, $files);
+            $filemtime = filemtime($files[$key]);
 
-        return array_diff($files, $filenameSeeded);
+            if( $filemtime > $seed->hash )
+                $edited[] = $fullPath;
+
+            return false;
+        }, $seeded->toArray());
+
+        $diff = [];
+        array_walk($files, function($file) use($seeded, &$diff) {
+            $filename = pathinfo($file)['filename'];
+
+            if(! $seeded->contains('name', $filename))
+                $diff[] = $file;
+        });
+
+        return array_merge($diff, $edited);
     }
 }
 
@@ -77,5 +92,16 @@ if( !function_exists('getTableSchema')) {
             ->getColumnListing( $table->getTable() );
 
         return $fields;
+    }
+}
+
+/**
+ * Get seeded files by env ..
+ *
+ */
+if(! function_exists('getSeeded')) {
+
+    function getSeeded($env) {
+        return app('smart.seed.repository')->getSeeds( $env );
     }
 }
