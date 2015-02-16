@@ -105,3 +105,22 @@ if(! function_exists('getSeeded')) {
         return app('smart.seed.repository')->getSeeds( $env );
     }
 }
+
+/**
+ * Get full path by source ...
+ */
+if(! function_exists('getFullPathSource')) {
+
+    function getFullPathSource($source, \LaravelSeed\Contracts\ProviderInterface $provider) {
+        $path   = $provider->getConfig('path');
+        $source = pathinfo($source)['filename'];
+        $env    = $provider->getEnv();
+
+        if( !preg_match("/\\_".$env."/i", $source) )
+            $path .= DIRECTORY_SEPARATOR . $source . '_' . $env;
+
+        $path .= '.' . $provider->getExtension();
+
+        return $path;
+    }
+}
