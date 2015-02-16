@@ -49,8 +49,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
                 return false;
             }
 
-            $fileName = trim(strtolower($name)) . '_' . self::getEnv() . '.yaml';
-            $fullPath = $path . DIRECTORY_SEPARATOR . $fileName;
+            $fullPath = getFullPathSource($name, $this);
 
             if( File::exists($fullPath)) {
                 $command->error(sprintf('Model %s already exists. Skipped!', $fileName));
@@ -65,7 +64,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
                 ], 1
             ));
 
-            $command->info(sprintf('File %s created successfully!', $fileName));
+            $command->info(sprintf('File %s created successfully!', $name));
         });
     }
 
