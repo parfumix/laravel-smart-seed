@@ -32,8 +32,10 @@ class Run extends AbstractCommand {
         try {
             parent::fire();
 
-            $env    = self::detectEnvironment();
-            $source = $this->argument('source');
+            $env     = self::detectEnvironment();
+            $source  = $this->argument('source');
+            $seeded  = getSeeded( $env );
+
 
             $provider = ProviderFactory::factory($source, $env);
 
@@ -43,10 +45,10 @@ class Run extends AbstractCommand {
                 if( ! self::isClosure($closure))
                     throw new SeederException('Invalid closure declared to config file');
 
-               $collection = $closure( $source, $env, $this );
+               $collection = $closure( $source, $seeded, $env, $this );
 
             } elseif( $provider instanceof ProviderInterface ) {
-                $collection =  $provider->getData($source);
+                $collection =  $provider->getData($source, $seeded);
             }
 
             if( $collection->isEmpty() )
