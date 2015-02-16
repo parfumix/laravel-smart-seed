@@ -52,7 +52,7 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
             $fullPath = getFullPathSource($name, $this);
 
             if( File::exists($fullPath)) {
-                $command->error(sprintf('Model %s already exists. Skipped!', $fileName));
+                $command->error(sprintf('Model %s already exists. Skipped!', $name));
                 return false;
             }
 
