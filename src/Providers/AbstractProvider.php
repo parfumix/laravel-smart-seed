@@ -76,4 +76,33 @@ class AbstractProvider {
 
         return $this->config;
     }
+
+    /**
+     * Get current provider extension ...
+     *
+     * @return mixed
+     */
+    public function getExtension() {
+        if( $this->ext )
+            return $this->ext;
+    }
+
+    /**
+     * Get full path by source name ...
+     *
+     * @param $source
+     * @return array|string
+     */
+    public function getFullPath($source) {
+        $path   = self::getConfig('path');
+        $source = pathinfo($source)['filename'];
+        $env    = self::getEnv();
+
+        if( !preg_match("/\\_".$env."/i", $source) )
+            $path .= DIRECTORY_SEPARATOR . $source . '_' . $env;
+
+        $path .= '.' . self::getExtension();
+
+        return $path;
+    }
 }
