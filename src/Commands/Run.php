@@ -32,10 +32,10 @@ class Run extends AbstractCommand {
         try {
             parent::fire();
 
-            $env     = self::detectEnvironment();
-            $source  = $this->argument('source');
-            $seeded  = getSeeded( $env );
-
+            $env        = self::detectEnvironment();
+            $source     = $this->argument('source');
+            $seeded     = getSeeded( $env );
+            $collection = collect([]);
 
             $provider = ProviderFactory::factory($source, $env);
 

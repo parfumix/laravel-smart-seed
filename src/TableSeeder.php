@@ -2,9 +2,12 @@
 
 use DB;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class TableSeeder {
+
+    protected $repository;
 
     /**
      * @var Command
@@ -35,48 +38,56 @@ class TableSeeder {
      * @return array
      */
     public function seed(Collection $data, $env) {
-        $seedRepository = app('smart.seed.repository');
-        $batch = $seedRepository->getNextBatch($env);
+        $batch = self::getRepository()->getNextBatch($env);
 
-        DB::transaction(function() use($seedRepository, $env, $data, $batch) {
+        DB::transaction(function() use($env, $data, $batch) {
 
-            $data->each(function($seed) use($seedRepository, $env, $batch) {
-
-                $class = $seed['class'];
-
-                $isSeeded = false;
-                $name     =  strtolower($class) . '_' . strtolower($env);
-
-
-                $classname = 'App\\' . $class;
-                $obj       = new $classname;
-                $table     = $obj->getTable();
-
-                if( $seedObj = $seedRepository->getSeed( $name, $env ) ) {
-                    $isSeeded = true;
-
-                    $seedRepository->updateSeed($seedObj->id, [
-                     'hash' => $seed['hash']
-                    ]);
-
-                    DB::table( $table )->delete();
-                }
-
-                array_walk($seed['source'], function($source) use($class, $isSeeded, $table, $classname) {
-                    $classname::create($source);
-                });
-
-                if(! $isSeeded)
-                    $seedRepository->addSeed(strtolower($class) . '_' . $env,  $seed['hash'], $env, $batch);
-
-                $message = sprintf('Class %s seeded successfully!', $class);
-                if( $isSeeded )
-                    $message = sprintf('Class %s updated successfully!', $class);
-
-                self::getCommand()->info($message);
+            $data->each(function($seed) {
+                self::process($seed['class'], $seed['child'] ?: null, null, $seed['source']);
             });
-
         });
+    }
+
+
+    public function process($class, $child = null, $parent = null, array $items) {
+        $model = self::getTable($class);
+
+        array_walk($items, function($item) use($model, $child, $parent) {
+            $toInsert = $item;
+
+            if( isset($parent->id) )
+                $toInsert += [strtolower(str_singular($parent->getTable())) .'_id' => $parent->id];
+
+            $parentObj = $model::create($toInsert);
+
+            if( isset($item['items']) )
+                self::process( $child, isset($item['child']) ? $item['child'] : null, $parentObj, $item['items']);
+        });
+
+
+       /* $isSeeded = false;
+
+
+        if( $seedObj = self::getRepository()->getSeed( strtolower($class), $env ) ) {
+            $isSeeded = true;
+
+            self::getRepository()->updateSeed($seedObj->id, [
+                'hash' => $seed['hash']
+            ]);
+
+            DB::table( $table )->delete();
+        }
+
+
+
+        if(! $isSeeded)
+            self::getRepository()->addSeed(strtolower($class),  $seed['hash'], $env, $batch);
+
+        $message = sprintf('Class %s seeded successfully!', $class);
+        if( $isSeeded )
+            $message = sprintf('Class %s updated successfully!', $class);
+
+        self::getCommand()->info($message);*/
     }
 
     /**
@@ -90,7 +101,7 @@ class TableSeeder {
                $class     = current(explode('_', $seed->name));
                $classname = 'App\\' . ucfirst($class);
 
-               if(! isEloquentExists($classname)) {
+               if( !isEloquentExists($classname)) {
                    self::getCommand()->error(sprintf('Class %s do not exists. Skipped!', $classname));
                    return false;
                }
@@ -102,5 +113,22 @@ class TableSeeder {
                self::getCommand()->info(sprintf('Class %s rollback successfully!', $classname));
            });
         });
+    }
+
+    /**
+     * Get seed repository ..
+     *
+     * @return mixed
+     */
+    private function getRepository() {
+        if( $this->repository )
+            return $this->repository;
+
+        return app('smart.seed.repository');
+    }
+
+    private function getTable($class) {
+        $classname = 'App\\' . $class;
+        return new $classname;
     }
 }
