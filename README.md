@@ -21,7 +21,7 @@ To wire this up in your Laravel project, you need to add the service provider. O
 Publish your config file using the following command.
 
 ```php
-php artisan vendor:publish
+php artisan smart:install
 ```
 
 ## Add new source seeders.
