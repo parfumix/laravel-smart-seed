@@ -21,4 +21,11 @@ interface ProviderInterface {
      * @return mixed
      */
     public function create(Command $command);
+
+    /**
+     * Return current provider ext ..
+     *
+     * @return mixed
+     */
+    public function getExtension();
 }
