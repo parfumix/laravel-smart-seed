@@ -18,17 +18,6 @@ To wire this up in your Laravel project, you need to add the service provider. O
  'LaravelSeed\Laravel5SeedServiceProvider',
 ```
 
-Then, you have to register a command. Just go to app/console/kernel and add following line:
-
-```php
-protected $commands = [
-    'App\Console\Commands\Inspire',
-		
-    # --- insert that ---
-    LaravelSeed\Commands\Seeder::class
-];
-```
-
 Publish your config file using the following command.
 
 ```php
