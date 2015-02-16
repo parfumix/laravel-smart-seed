@@ -53,7 +53,7 @@ if( !function_exists('getDiffFiles')) {
     function getDiffFiles(array $files, \Illuminate\Support\Collection $seeded, \LaravelSeed\Contracts\ProviderInterface $provider) {
         $edited = [];
         array_map(function($seed) use($files, &$edited, $provider) {
-            $fullPath = $provider->getFullPath( $seed->name );
+            $fullPath = getFullPathSource( $seed->name, $provider );
 
             if(! in_array($fullPath, $files))
                 return false;
@@ -117,9 +117,9 @@ if(! function_exists('getFullPathSource')) {
         $env    = $provider->getEnv();
 
         if( !preg_match("/\\_".$env."/i", $source) )
-            $path .= DIRECTORY_SEPARATOR . $source . '_' . $env;
+            $source = $source . '_' . $env;
 
-        $path .= '.' . $provider->getExtension();
+        $path = $path . DIRECTORY_SEPARATOR . $source . '.' . $provider->getExtension();
 
         return $path;
     }
