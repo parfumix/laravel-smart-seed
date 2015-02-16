@@ -17,11 +17,11 @@ if( !function_exists('arrayToYaml') ) {
  */
 if( !function_exists('getFilesFromPathByEnv')) {
 
-    function getFilesFromPathByEnv($path, $env = '') {
+    function getFilesFromPathByEnv(\LaravelSeed\Contracts\ProviderInterface $provider) {
         $finder = new Symfony\Component\Finder\Finder;
         $files  = [];
-        $finder->name("/\_".strtolower(trim($env))."\.(\w{1,4})$/i");
-        foreach ($finder->in($path) as $file) {
+        $finder->name("/\_".$provider->getExtension()."\.(\w{1,4})$/i");
+        foreach ($finder->in($provider->getConfig('path')) as $file) {
             $files[] = $file->getPath() . '/' .$file->getFilename();
         }
 
@@ -50,10 +50,10 @@ if( !function_exists('isEloquentExists')) {
  */
 if( !function_exists('getDiffFiles')) {
 
-    function getDiffFiles(array $files, \Illuminate\Support\Collection $seeded, $pathProvider, $ext) {
+    function getDiffFiles(array $files, \Illuminate\Support\Collection $seeded, \LaravelSeed\Contracts\ProviderInterface $provider) {
         $edited = [];
-        array_map(function($seed) use($files, $pathProvider, $ext, &$edited) {
-            $fullPath = $pathProvider . '/' . $seed->name . '.' . $ext;
+        array_map(function($seed) use($files, &$edited, $provider) {
+            $fullPath = $provider->getFullPath( $seed->name );
 
             if(! in_array($fullPath, $files))
                 return false;
