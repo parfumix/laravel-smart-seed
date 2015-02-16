@@ -19,17 +19,9 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
      * @return array|mixed
      */
     public function getData($source = '', Collection $seeded) {
-        $path = self::getConfig('path');
-        $files = [];
+        $files = $source ? getFullPathSource($source, $this) : getFilesFromPathByEnv( $this );
 
-        if( $source ) {
-            $files[] = getFullPathSource($source, $this);
-        } else {
-            $files   = getFilesFromPathByEnv( $this );
-        }
-
-
-        $diffFiles = getDiffFiles($files , $seeded, $path, self::getExtension());
+        $diffFiles = getDiffFiles($files , $seeded, $this);
 
         return self::parseYamlFiles($diffFiles);
     }
