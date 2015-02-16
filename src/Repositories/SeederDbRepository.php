@@ -123,6 +123,22 @@ class SeederDbRepository implements RepositoryInterface {
     }
 
     /**
+     * Get seed by $name and $env ...
+     *
+     * @param $name
+     * @param $env
+     * @return mixed|null
+     */
+    public function getSeed($name, $env) {
+        return collect(
+            $this->connection()->table( self::getDefaultTable() )
+                ->where('env', '=', $env)
+                ->where('name', '=', $name)
+                ->get(['*'])
+        )->first();
+    }
+
+    /**
      * Insert an seed ..
      *
      * @param $name
@@ -139,6 +155,19 @@ class SeederDbRepository implements RepositoryInterface {
                'env'    => $env,
                'batch'  => $batch,
            ]);
+    }
+
+    /**
+     * Update seed .
+     *
+     * @param $id
+     * @param $params
+     * @return mixed
+     */
+    public function updateSeed( $id, $params ) {
+        return $this->connection()->table( self::getDefaultTable() )
+            ->where('id', '=', $id)
+            ->update($params);
     }
 
     /**
