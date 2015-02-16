@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Parser;
 
 class YamlProvider extends AbstractProvider implements ProviderInterface {
 
-    const PROVIDER_EXT = 'yaml';
+    protected $ext = 'yaml';
 
     /**
      * Return an array of data to be parsed ...
@@ -23,12 +23,13 @@ class YamlProvider extends AbstractProvider implements ProviderInterface {
         $files = [];
 
         if( $source ) {
-            $files[] = trim(strtolower($source)) .'_' . self::getEnv() . '.' . self::PROVIDER_EXT ;
+            $files[] = getFullPathSource($source, $this);
         } else {
-            $files   = getFilesFromPathByEnv( $path ,self::getEnv() );
+            $files   = getFilesFromPathByEnv( $this );
         }
 
-        $diffFiles = getDiffFiles($files , $seeded, $path, self::PROVIDER_EXT);
+
+        $diffFiles = getDiffFiles($files , $seeded, $path, self::getExtension());
 
         return self::parseYamlFiles($diffFiles);
     }
