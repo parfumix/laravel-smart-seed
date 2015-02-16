@@ -20,7 +20,7 @@ if( !function_exists('getFilesFromPathByEnv')) {
     function getFilesFromPathByEnv(\LaravelSeed\Contracts\ProviderInterface $provider) {
         $finder = new Symfony\Component\Finder\Finder;
         $files  = [];
-        $finder->name("/\_".$provider->getExtension()."\.(\w{1,4})$/i");
+        $finder->name("/\_".$provider->getEnv()."\.(\w{1,4})$/i");
         foreach ($finder->in($provider->getConfig('path')) as $file) {
             $files[] = $file->getPath() . '/' .$file->getFilename();
         }
