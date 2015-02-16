@@ -41,16 +41,39 @@ class TableSeeder {
         DB::transaction(function() use($seedRepository, $env, $data, $batch) {
 
             $data->each(function($seed) use($seedRepository, $env, $batch) {
+
                 $class = $seed['class'];
 
-                array_walk($seed['source'], function($source) use($class) {
-                    $classname = 'App\\' . $class;
+                $isSeeded = false;
+                $name     =  strtolower($class) . '_' . strtolower($env);
+
+
+                $classname = 'App\\' . $class;
+                $obj       = new $classname;
+                $table     = $obj->getTable();
+
+                if( $seedObj = $seedRepository->getSeed( $name, $env ) ) {
+                    $isSeeded = true;
+
+                    $seedRepository->updateSeed($seedObj->id, [
+                     'hash' => $seed['hash']
+                    ]);
+
+                    DB::table( $table )->delete();
+                }
+
+                array_walk($seed['source'], function($source) use($class, $isSeeded, $table, $classname) {
                     $classname::create($source);
                 });
 
-                $seedRepository->addSeed(strtolower($class) . '_' . $env, 'hash', $env, $batch);
+                if(! $isSeeded)
+                    $seedRepository->addSeed(strtolower($class) . '_' . $env,  $seed['hash'], $env, $batch);
 
-                self::getCommand()->info(sprintf('Class %s seeded successfully!', $class));
+                $message = sprintf('Class %s seeded successfully!', $class);
+                if( $isSeeded )
+                    $message = sprintf('Class %s updated successfully!', $class);
+
+                self::getCommand()->info($message);
             });
 
         });
