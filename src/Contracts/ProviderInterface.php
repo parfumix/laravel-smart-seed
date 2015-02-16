@@ -1,7 +1,7 @@
 <?php namespace LaravelSeed\Contracts;
 
-
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 interface ProviderInterface {
 
@@ -9,9 +9,10 @@ interface ProviderInterface {
      * Get an array of data ...
      *
      * @param string $source
+     * @param Collection $seeded
      * @return mixed
      */
-    public function getData($source = '');
+    public function getData($source = '', Collection $seeded);
 
     /**
      * Make an file source ..
