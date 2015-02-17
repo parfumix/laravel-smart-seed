@@ -137,3 +137,27 @@ if(! function_exists('getFirstKeyArray')) {
         }
     }
 }
+
+/**
+ * Get models seed from array ...
+ *
+ */
+if(! function_exists('getModelsSeed')) {
+
+    function getModelsSeed(array $seed) {
+        $hash = [];
+
+        foreach ($seed as $key => $val) {
+            if( !is_array($val) )
+                continue;
+
+            if(!is_numeric($key))
+                $hash[] = $key;
+
+            $hash = array_merge($hash, getModelsSeed($val));
+        }
+
+        return $hash;
+    }
+
+}
