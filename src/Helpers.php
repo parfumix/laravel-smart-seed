@@ -124,3 +124,16 @@ if(! function_exists('getFullPathSource')) {
         return $path;
     }
 }
+
+/**
+ * Get first array key ...
+ *
+ */
+if(! function_exists('getFirstKeyArray')) {
+    function getFirstKeyArray(array $array) {
+        foreach ($array as $key => $value) {
+            if( is_array($value) )
+                return $key;
+        }
+    }
+}
