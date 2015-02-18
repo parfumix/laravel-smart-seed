@@ -81,19 +81,28 @@ class TableSeeder {
      * @param $class
      * @param null $parent
      * @param array $items
+     * @param null $sameParent
      */
-    public function seedProcessing($class, $parent = null, array $items) {
+    public function seedProcessing($class, $parent = null, array $items, $sameParent = null) {
         $model = self::getTable($class);
 
-        array_walk($items, function ($item) use ($model, $parent) {
-            if (isset($parent->id)) {
+        array_walk($items, function ($item) use ($model, $parent, $class, $sameParent) {
+            if (isset($parent->id))
                 $item = array_merge([str_singular($parent->getTable()) . '_id' => $parent->id], $item);
-            }
+
+            if( isset($sameParent->id) )
+                $item = array_merge(['parent_id' => $sameParent->id], $item);
 
             $created = $model::create($item);
 
-            if ($child = getFirstKeyArray($item))
-                self::seedProcessing(str_singular($child), $created, $item[$child]);
+            if ($child = getFirstKeyArray($item)) {
+                if( str_singular($child) == $class ) {
+                    self::seedProcessing(str_singular($child), $parent ?: null, $item[$child], $created);
+                } else {
+                    self::seedProcessing(str_singular($child), $created, $item[$child]);
+                }
+
+            }
         });
     }
 
